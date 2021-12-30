@@ -4,7 +4,8 @@ all: lint test
 
 .PHONY: lint
 lint: ## Lint the files
-	@golangci-lint run --version --timeout 3m0s
+	@golangci-lint version
+	@golangci-lint run --timeout 3m0s
 
 .PHONY: test
 test: ## Run unit tests
