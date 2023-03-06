@@ -1,6 +1,7 @@
 package record
 
 import (
+	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
@@ -61,3 +62,29 @@ func ExtractNumber(record *api.Record, path string) (*float64, error) {
 	}
 	return nil, fmt.Errorf("invalid type while extracting number from path %v, expected numeric value but received %T", path, val)
 }
+
+func ExtractString(record *api.Record, path string, caseSensitive bool) (*string, error) {
+	val := Extract(record, path)
+	if val == nil {
+		return nil, nil
+	}
+	switch val.(type) {
+	case map[string]any, []any:
+		marshal, err := json.Marshal(val)
+		if err != nil {
+			return nil, err
+		}
+		jsonString := string(marshal)
+		if !caseSensitive {
+			jsonString = strings.ToLower(jsonString)
+		}
+		return &jsonString, nil
+	}
+	stringVal := fmt.Sprintf("%v", val)
+	if !caseSensitive {
+		stringVal = strings.ToLower(stringVal)
+	}
+	return &stringVal, nil
+}
+
+// TODO: Add extract multi path string

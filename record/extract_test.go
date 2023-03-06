@@ -6,6 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"github.com/tilotech/tilores-insights/helpers"
 	"github.com/tilotech/tilores-insights/record"
 	api "github.com/tilotech/tilores-plugin-api"
 )
@@ -157,10 +158,6 @@ func TestExtractNumber(t *testing.T) {
 		Data: data,
 	}
 
-	p := func(n float64) *float64 {
-		return &n
-	}
-
 	cases := map[string]struct {
 		expected    any
 		expectError bool
@@ -169,19 +166,19 @@ func TestExtractNumber(t *testing.T) {
 			expectError: true,
 		},
 		"int": {
-			expected: p(123.0),
+			expected: helpers.NullifyFloat(123.0),
 		},
 		"float": {
-			expected: p(123.4),
+			expected: helpers.NullifyFloat(123.4),
 		},
 		"nullValue": {
 			expected: nil,
 		},
 		"numericText": {
-			expected: p(123.0),
+			expected: helpers.NullifyFloat(123.0),
 		},
 		"exponent": {
-			expected: p(1000.0),
+			expected: helpers.NullifyFloat(1000.0),
 		},
 		"nested": {
 			expectError: true,
@@ -197,6 +194,108 @@ func TestExtractNumber(t *testing.T) {
 				assert.Nil(t, actual)
 			} else {
 				assert.Equal(t, c.expected, actual)
+			}
+		})
+	}
+}
+
+func TestExtractString(t *testing.T) {
+	dataJSON := `
+	{
+		"nested": {
+			"value": "nested string value",
+			"super": {
+				"value": "Super Nested String Value"
+			}
+		},
+		"list": [
+			"abc",
+			"DEF",
+			"geh"
+		],
+		"keepUpper": "Has Upper Case",
+		"caseInsensitive": "Has Upper Case",
+    "bool": true,
+		"emptyString": "",
+		"int": 123,
+		"float": 123.4,
+		"nullValue": null,
+		"numericText": "123",
+		"exponent": "1e3",
+		"nested": {
+			"propB": "valB",
+			"propA": "valA"
+		}
+	}
+	`
+	data := map[string]any{}
+	err := json.Unmarshal([]byte(dataJSON), &data)
+	require.NoError(t, err)
+
+	r := &api.Record{
+		ID:   "some-id",
+		Data: data,
+	}
+
+	cases := map[string]struct {
+		expected      *string
+		caseSensitive bool
+	}{
+		"bool": {
+			expected: helpers.NullifyString("true"),
+		},
+		"int": {
+			expected: helpers.NullifyString("123"),
+		},
+		"float": {
+			expected: helpers.NullifyString("123.4"),
+		},
+		"nullValue": {
+			expected: nil,
+		},
+		"numericText": {
+			expected: helpers.NullifyString("123"),
+		},
+		"exponent": {
+			expected: helpers.NullifyString("1e3"),
+		},
+		"nested": {
+			caseSensitive: true,
+			expected:      helpers.NullifyString(`{"propA":"valA","propB":"valB"}`),
+		},
+		"keepUpper": {
+			caseSensitive: true,
+			expected:      helpers.NullifyString("Has Upper Case"),
+		},
+		"caseInsensitive": {
+			expected: helpers.NullifyString("has upper case"),
+		},
+		"list.0": {
+			expected: helpers.NullifyString("abc"),
+		},
+		"list.1": {
+			expected: helpers.NullifyString("def"),
+		},
+		"list.2": {
+			expected: helpers.NullifyString("geh"),
+		},
+		"list": {
+			expected: helpers.NullifyString(`["abc","def","geh"]`),
+		},
+		"emptyString": {
+			expected: helpers.NullifyString(""),
+		},
+	}
+
+	for path, c := range cases {
+		t.Run(path, func(t *testing.T) {
+			actual, err := record.ExtractString(r, path, c.caseSensitive)
+			assert.NoError(t, err)
+			if c.expected == nil {
+				assert.Nil(t, actual)
+			} else {
+				require.NotNil(t, actual)
+				assert.Equal(t, *c.expected, *actual)
 			}
 		})
 	}

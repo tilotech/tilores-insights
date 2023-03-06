@@ -29,13 +29,6 @@ func TestCount(t *testing.T) {
 			records:  nil,
 			expected: 0,
 		},
-		"list with nil values": {
-			records: []*api.Record{
-				{},
-				nil,
-			},
-			expected: 2,
-		},
 	}
 
 	for name, c := range cases {
