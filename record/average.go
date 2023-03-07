@@ -4,6 +4,11 @@ import (
 	api "github.com/tilotech/tilores-plugin-api"
 )
 
+// Average returns the average value of the provided numeric path.
+//
+// Using average on non-numeric paths will raise an error.
+// Null values are ignored in the calculation.
+// Returns null if all values are null.
 func Average(records []*api.Record, path string) (*float64, error) {
 	if len(records) == 0 {
 		return nil, nil

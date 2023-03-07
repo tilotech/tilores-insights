@@ -6,6 +6,12 @@ import (
 	api "github.com/tilotech/tilores-plugin-api"
 )
 
+// StandardDeviation calculates the standard deviation for the provided numeric
+// path.
+//
+// Using standardDeviation on non-numeric paths will raise an error.
+// Null values are ignored in the calculation.
+// Returns null if all values are null.
 func StandardDeviation(records []*api.Record, path string) (*float64, error) {
 	if len(records) == 0 {
 		return nil, nil
