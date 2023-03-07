@@ -2,6 +2,7 @@ package record_test
 
 import (
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -19,6 +20,7 @@ func TestFilter(t *testing.T) {
 				"faz": "BAZ",
 			},
 			"numeric": 12.3,
+			"time":    "2022-01-01T00:00:00Z",
 		},
 	}
 	r2 := &api.Record{
@@ -26,6 +28,7 @@ func TestFilter(t *testing.T) {
 		Data: map[string]any{
 			"value":   "string B",
 			"numeric": "123",
+			"time":    "2023-01-01T00:00:00Z",
 		},
 	}
 	r3 := &api.Record{
@@ -33,6 +36,7 @@ func TestFilter(t *testing.T) {
 		Data: map[string]any{
 			"value":   "other string A",
 			"numeric": 1234.0,
+			"time":    "2024-01-01T00:00:00Z",
 		},
 	}
 	defaultRecords := []*api.Record{
@@ -463,6 +467,177 @@ func TestFilter(t *testing.T) {
 				},
 			},
 			expectError: true,
+		},
+		"after": {
+			records: defaultRecords,
+			conditions: []*insights.FilterCondition{
+				{
+					Path:  "time",
+					After: pointer(time.Date(2022, 06, 01, 0, 0, 0, 0, time.UTC)),
+				},
+			},
+			expected: []*api.Record{r2, r3},
+		},
+		"after, equal second record": {
+			records: defaultRecords,
+			conditions: []*insights.FilterCondition{
+				{
+					Path:  "time",
+					After: pointer(time.Date(2023, 01, 01, 0, 0, 0, 0, time.UTC)),
+				},
+			},
+			expected: []*api.Record{r3},
+		},
+		"after, nil value": {
+			records: defaultRecords,
+			conditions: []*insights.FilterCondition{
+				{
+					Path:  "does not exist",
+					After: pointer(time.Date(2022, 06, 01, 0, 0, 0, 0, time.UTC)),
+				},
+			},
+			expected: []*api.Record{},
+		},
+		"after, not a time": {
+			records: defaultRecords,
+			conditions: []*insights.FilterCondition{
+				{
+					Path:  "value",
+					After: pointer(time.Date(2022, 06, 01, 0, 0, 0, 0, time.UTC)),
+				},
+			},
+			expectError: true,
+		},
+		"since": {
+			records: defaultRecords,
+			conditions: []*insights.FilterCondition{
+				{
+					Path:  "time",
+					Since: pointer(time.Date(2022, 06, 01, 0, 0, 0, 0, time.UTC)),
+				},
+			},
+			expected: []*api.Record{r2, r3},
+		},
+		"since, equal second record": {
+			records: defaultRecords,
+			conditions: []*insights.FilterCondition{
+				{
+					Path:  "time",
+					Since: pointer(time.Date(2023, 01, 01, 0, 0, 0, 0, time.UTC)),
+				},
+			},
+			expected: []*api.Record{r2, r3},
+		},
+		"since, nil value": {
+			records: defaultRecords,
+			conditions: []*insights.FilterCondition{
+				{
+					Path:  "does not exist",
+					Since: pointer(time.Date(2022, 06, 01, 0, 0, 0, 0, time.UTC)),
+				},
+			},
+			expected: []*api.Record{},
+		},
+		"since, not a time": {
+			records: defaultRecords,
+			conditions: []*insights.FilterCondition{
+				{
+					Path:  "value",
+					Since: pointer(time.Date(2022, 06, 01, 0, 0, 0, 0, time.UTC)),
+				},
+			},
+			expectError: true,
+		},
+		"before": {
+			records: defaultRecords,
+			conditions: []*insights.FilterCondition{
+				{
+					Path:   "time",
+					Before: pointer(time.Date(2023, 06, 01, 0, 0, 0, 0, time.UTC)),
+				},
+			},
+			expected: []*api.Record{r1, r2},
+		},
+		"before, equal second record": {
+			records: defaultRecords,
+			conditions: []*insights.FilterCondition{
+				{
+					Path:   "time",
+					Before: pointer(time.Date(2023, 01, 01, 0, 0, 0, 0, time.UTC)),
+				},
+			},
+			expected: []*api.Record{r1},
+		},
+		"before, nil value": {
+			records: defaultRecords,
+			conditions: []*insights.FilterCondition{
+				{
+					Path:   "does not exist",
+					Before: pointer(time.Date(2023, 06, 01, 0, 0, 0, 0, time.UTC)),
+				},
+			},
+			expected: []*api.Record{},
+		},
+		"before, not a time": {
+			records: defaultRecords,
+			conditions: []*insights.FilterCondition{
+				{
+					Path:   "value",
+					Before: pointer(time.Date(2023, 06, 01, 0, 0, 0, 0, time.UTC)),
+				},
+			},
+			expectError: true,
+		},
+		"until": {
+			records: defaultRecords,
+			conditions: []*insights.FilterCondition{
+				{
+					Path:  "time",
+					Until: pointer(time.Date(2023, 06, 01, 0, 0, 0, 0, time.UTC)),
+				},
+			},
+			expected: []*api.Record{r1, r2},
+		},
+		"until, equal second record": {
+			records: defaultRecords,
+			conditions: []*insights.FilterCondition{
+				{
+					Path:  "time",
+					Until: pointer(time.Date(2023, 01, 01, 0, 0, 0, 0, time.UTC)),
+				},
+			},
+			expected: []*api.Record{r1, r2},
+		},
+		"until, nil value": {
+			records: defaultRecords,
+			conditions: []*insights.FilterCondition{
+				{
+					Path:  "does not exist",
+					Until: pointer(time.Date(2023, 06, 01, 0, 0, 0, 0, time.UTC)),
+				},
+			},
+			expected: []*api.Record{},
+		},
+		"until, not a time": {
+			records: defaultRecords,
+			conditions: []*insights.FilterCondition{
+				{
+					Path:  "value",
+					Until: pointer(time.Date(2023, 06, 01, 0, 0, 0, 0, time.UTC)),
+				},
+			},
+			expectError: true,
+		},
+		"equal strings, inverted": {
+			records: defaultRecords,
+			conditions: []*insights.FilterCondition{
+				{
+					Path:   "value",
+					Equal:  "string a",
+					Invert: pointer(true),
+				},
+			},
+			expected: []*api.Record{r2, r3},
 		},
 	}
 

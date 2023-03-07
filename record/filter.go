@@ -67,15 +67,32 @@ func Filter(records []*api.Record, conditions []*FilterCondition) ([]*api.Record
 
 func checkFilterConditions(record *api.Record, conditions []*FilterCondition) (bool, error) {
 	for _, condition := range conditions {
-		if !checkFilterCriteriaIsNull(record, condition) {
+		keep, err := checkFilterCondition(record, condition)
+		if err != nil {
+			return false, err
+		}
+		if condition.Invert != nil && *condition.Invert {
+			keep = !keep
+		}
+		if !keep {
 			return false, nil
 		}
-		if keep, err := checkFilterStringCriteria(record, condition); !keep || err != nil {
-			return keep, err
-		}
-		if keep, err := checkFilterNumericCriteria(record, condition); !keep || err != nil {
-			return keep, err
-		}
+	}
+	return true, nil
+}
+
+func checkFilterCondition(record *api.Record, condition *FilterCondition) (bool, error) {
+	if !checkFilterCriteriaIsNull(record, condition) {
+		return false, nil
+	}
+	if keep, err := checkFilterStringCriteria(record, condition); !keep || err != nil {
+		return keep, err
+	}
+	if keep, err := checkFilterNumericCriteria(record, condition); !keep || err != nil {
+		return keep, err
+	}
+	if keep, err := checkFilterTimeCriteria(record, condition); !keep || err != nil {
+		return keep, err
 	}
 	return true, nil
 }
@@ -205,30 +222,20 @@ func checkFilterNumericCriteria(record *api.Record, condition *FilterCondition) 
 		return false, err
 	}
 
-	if !checkFilterCriteriaCompareNumber(value, condition.LessThan, checkFilterOpLessThan) {
+	if !checkFilterCriteriaCompare(value, condition.LessThan, checkFilterOpLessThan) {
 		return false, nil
 	}
-	if !checkFilterCriteriaCompareNumber(value, condition.LessEqual, checkFilterOpLessEqual) {
+	if !checkFilterCriteriaCompare(value, condition.LessEqual, checkFilterOpLessEqual) {
 		return false, nil
 	}
-	if !checkFilterCriteriaCompareNumber(value, condition.GreaterThan, checkFilterOpGreaterThan) {
+	if !checkFilterCriteriaCompare(value, condition.GreaterThan, checkFilterOpGreaterThan) {
 		return false, nil
 	}
-	if !checkFilterCriteriaCompareNumber(value, condition.GreaterEqual, checkFilterOpGreaterEqual) {
+	if !checkFilterCriteriaCompare(value, condition.GreaterEqual, checkFilterOpGreaterEqual) {
 		return false, nil
 	}
 
 	return true, nil
-}
-
-func checkFilterCriteriaCompareNumber(value *float64, test *float64, op func(a, b float64) bool) bool {
-	if test == nil {
-		return true
-	}
-	if value == nil {
-		return false
-	}
-	return op(*value, *test)
 }
 
 func checkFilterOpLessThan(a, b float64) bool {
@@ -245,4 +252,63 @@ func checkFilterOpGreaterThan(a, b float64) bool {
 
 func checkFilterOpGreaterEqual(a, b float64) bool {
 	return a >= b
+}
+
+func hasFilterTimeCriteria(condition *FilterCondition) bool {
+	return condition.After != nil ||
+		condition.Since != nil ||
+		condition.Before != nil ||
+		condition.Until != nil
+}
+
+func checkFilterTimeCriteria(record *api.Record, condition *FilterCondition) (bool, error) {
+	if !hasFilterTimeCriteria(condition) {
+		return true, nil
+	}
+
+	value, err := ExtractTime(record, condition.Path)
+	if err != nil {
+		return false, err
+	}
+
+	if !checkFilterCriteriaCompare(value, condition.After, checkFilterOpAfter) {
+		return false, nil
+	}
+	if !checkFilterCriteriaCompare(value, condition.Since, checkFilterOpSince) {
+		return false, nil
+	}
+	if !checkFilterCriteriaCompare(value, condition.Before, checkFilterOpBefore) {
+		return false, nil
+	}
+	if !checkFilterCriteriaCompare(value, condition.Until, checkFilterOpUntil) {
+		return false, nil
+	}
+
+	return true, nil
+}
+
+func checkFilterOpAfter(a, b time.Time) bool {
+	return a.After(b)
+}
+
+func checkFilterOpSince(a, b time.Time) bool {
+	return a.Equal(b) || a.After(b)
+}
+
+func checkFilterOpBefore(a, b time.Time) bool {
+	return a.Before(b)
+}
+
+func checkFilterOpUntil(a, b time.Time) bool {
+	return a.Equal(b) || a.Before(b)
+}
+
+func checkFilterCriteriaCompare[T any](value *T, test *T, op func(a, b T) bool) bool {
+	if test == nil {
+		return true
+	}
+	if value == nil {
+		return false
+	}
+	return op(*value, *test)
 }
