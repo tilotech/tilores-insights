@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"time"
 
 	api "github.com/tilotech/tilores-plugin-api"
 )
@@ -72,6 +73,10 @@ func ExtractString(record *api.Record, path string, caseSensitive bool) (*string
 	if val == nil {
 		return nil, nil
 	}
+	return valueToString(val, caseSensitive)
+}
+
+func valueToString(val any, caseSensitive bool) (*string, error) {
 	switch val.(type) {
 	case map[string]any, []any:
 		marshal, err := json.Marshal(val)
@@ -89,6 +94,19 @@ func ExtractString(record *api.Record, path string, caseSensitive bool) (*string
 		stringVal = strings.ToLower(stringVal)
 	}
 	return &stringVal, nil
+}
+
+// ExtractTime provides a time value of a record for the given path.
+func ExtractTime(record *api.Record, path string) (*time.Time, error) {
+	value, err := ExtractString(record, path, true)
+	if value == nil || err != nil {
+		return nil, err
+	}
+	t, err := time.Parse(time.RFC3339Nano, *value)
+	if err != nil {
+		return nil, err
+	}
+	return &t, nil
 }
 
 // TODO: Add extract multi path string

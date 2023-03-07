@@ -3,6 +3,7 @@ package record_test
 import (
 	"encoding/json"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -190,8 +191,10 @@ func TestExtractNumber(t *testing.T) {
 			if c.expectError {
 				assert.Error(t, err)
 			} else if c.expected == nil {
+				require.NoError(t, err)
 				assert.Nil(t, actual)
 			} else {
+				require.NoError(t, err)
 				assert.Equal(t, c.expected, actual)
 			}
 		})
@@ -289,12 +292,59 @@ func TestExtractString(t *testing.T) {
 	for path, c := range cases {
 		t.Run(path, func(t *testing.T) {
 			actual, err := record.ExtractString(r, path, c.caseSensitive)
-			assert.NoError(t, err)
+			require.NoError(t, err)
 			if c.expected == nil {
 				assert.Nil(t, actual)
 			} else {
 				require.NotNil(t, actual)
 				assert.Equal(t, *c.expected, *actual)
+			}
+		})
+	}
+}
+
+func TestExtractTime(t *testing.T) {
+	dataJSON := `
+	{
+		"time": "2023-03-07T16:06:05Z",
+		"not-a-time": "something else"
+	}
+	`
+	data := map[string]any{}
+	err := json.Unmarshal([]byte(dataJSON), &data)
+	require.NoError(t, err)
+
+	r := &api.Record{
+		ID:   "some-id",
+		Data: data,
+	}
+
+	cases := map[string]struct {
+		expected    *time.Time
+		expectError bool
+	}{
+		"time": {
+			expected: pointer(time.Date(2023, 3, 7, 16, 6, 5, 0, time.UTC)),
+		},
+		"not-a-time": {
+			expectError: true,
+		},
+		"nullValue": {
+			expected: nil,
+		},
+	}
+
+	for path, c := range cases {
+		t.Run(path, func(t *testing.T) {
+			actual, err := record.ExtractTime(r, path)
+			if c.expectError {
+				assert.Error(t, err)
+			} else if c.expected == nil {
+				assert.Nil(t, err)
+			} else {
+				require.NoError(t, err)
+				require.NotNil(t, actual)
+				assert.True(t, c.expected.Equal(*actual), "expected %v and %v to be equal", c.expected, actual)
 			}
 		})
 	}
