@@ -72,6 +72,10 @@ func ExtractString(record *api.Record, path string, caseSensitive bool) (*string
 	if val == nil {
 		return nil, nil
 	}
+	return valueToString(val, caseSensitive)
+}
+
+func valueToString(val any, caseSensitive bool) (*string, error) {
 	switch val.(type) {
 	case map[string]any, []any:
 		marshal, err := json.Marshal(val)
