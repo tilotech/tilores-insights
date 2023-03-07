@@ -6,6 +6,7 @@ import (
 	api "github.com/tilotech/tilores-plugin-api"
 )
 
+// FrequencyDistributionEntry represents a single row of a frequency distribution table.
 type FrequencyDistributionEntry struct {
 	Value      any     `json:"value"`
 	Frequency  int     `json:"frequency"`
