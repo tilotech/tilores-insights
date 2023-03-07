@@ -63,6 +63,10 @@ func ExtractNumber(record *api.Record, path string) (*float64, error) {
 	return nil, fmt.Errorf("invalid type while extracting number from path %v, expected numeric value but received %T", path, val)
 }
 
+// ExtractString provides a string value of a record for the given path.
+//
+// If the value of that path is an array or a map, it will stringify the value
+// into JSON.
 func ExtractString(record *api.Record, path string, caseSensitive bool) (*string, error) {
 	val := Extract(record, path)
 	if val == nil {

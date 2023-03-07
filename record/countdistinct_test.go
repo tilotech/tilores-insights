@@ -11,8 +11,8 @@ import (
 func TestCountDistinct(t *testing.T) {
 	testRecords := []*api.Record{
 		{
-			"someid",
-			map[string]interface{}{
+			ID: "someid",
+			Data: map[string]interface{}{
 				"nested": map[string]interface{}{
 					"field1": "a",
 					"field2": "b",
@@ -20,8 +20,8 @@ func TestCountDistinct(t *testing.T) {
 			},
 		},
 		{
-			"someid",
-			map[string]interface{}{
+			ID: "someid",
+			Data: map[string]interface{}{
 				"nested": map[string]interface{}{
 					"field1": "c",
 					"field2": "d",
@@ -29,32 +29,33 @@ func TestCountDistinct(t *testing.T) {
 			},
 		},
 		{
-			"someid",
-			map[string]interface{}{
+			ID: "someid",
+			Data: map[string]interface{}{
 				"nested": map[string]interface{}{
 					"field2": "b",
 				},
 			},
 		},
 		{
-			"someid",
-			map[string]interface{}{
+			ID: "someid",
+			Data: map[string]interface{}{
 				"nested": map[string]interface{}{
 					"field1": "a",
 				},
 			},
 		},
 		{
-			"someid",
-			map[string]interface{}{
+			ID: "someid",
+			Data: map[string]interface{}{
 				"nested": map[string]interface{}{
 					"field1": "A",
 					"field2": "b",
 				},
 			},
-		}, {
-			"someid",
-			map[string]interface{}{
+		},
+		{
+			ID: "someid",
+			Data: map[string]interface{}{
 				"nested": map[string]interface{}{
 					"field1": "a",
 					"field2": "b",
@@ -63,8 +64,8 @@ func TestCountDistinct(t *testing.T) {
 			},
 		},
 		{
-			"someid",
-			map[string]interface{}{},
+			ID:   "someid",
+			Data: map[string]interface{}{},
 		},
 		nil,
 	}

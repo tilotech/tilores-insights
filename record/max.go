@@ -6,6 +6,9 @@ import (
 	api "github.com/tilotech/tilores-plugin-api"
 )
 
+// Max returns the highest value of the provided numeric path.
+//
+// Returns null if all values are null.
 func Max(records []*api.Record, path string) (*float64, error) {
 	if len(records) == 0 {
 		return nil, nil

@@ -6,6 +6,11 @@ import (
 	api "github.com/tilotech/tilores-plugin-api"
 )
 
+// Median returns the median value of the provided numeric path.
+//
+// Using median on non-numeric paths will raise an error.
+// Null values are ignored in the calculation.
+// Returns null if all values are null.
 func Median(records []*api.Record, path string) (*float64, error) {
 	if len(records) == 0 {
 		return nil, nil
