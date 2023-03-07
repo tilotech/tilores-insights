@@ -3,7 +3,6 @@ package record
 import (
 	"math"
 
-	"github.com/tilotech/tilores-insights/helpers"
 	api "github.com/tilotech/tilores-plugin-api"
 )
 
@@ -30,5 +29,5 @@ func Max(records []*api.Record, path string) (*float64, error) {
 	if counted == 0 {
 		return nil, nil
 	}
-	return helpers.NullifyFloat(max), nil
+	return pointer(max), nil
 }

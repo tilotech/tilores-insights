@@ -1,7 +1,6 @@
 package record
 
 import (
-	"github.com/tilotech/tilores-insights/helpers"
 	api "github.com/tilotech/tilores-plugin-api"
 )
 
@@ -24,5 +23,5 @@ func Average(records []*api.Record, path string) (*float64, error) {
 	if counted == 0 {
 		return nil, nil
 	}
-	return helpers.NullifyFloat(sum / counted), nil
+	return pointer(sum / counted), nil
 }

@@ -3,7 +3,6 @@ package record
 import (
 	"sort"
 
-	"github.com/tilotech/tilores-insights/helpers"
 	api "github.com/tilotech/tilores-plugin-api"
 )
 
@@ -27,7 +26,7 @@ func Median(records []*api.Record, path string) (*float64, error) {
 	}
 	sort.Float64s(numbers)
 	if counted%2 == 1 {
-		return helpers.NullifyFloat(numbers[(counted / 2)]), nil
+		return pointer(numbers[(counted / 2)]), nil
 	}
-	return helpers.NullifyFloat((numbers[counted/2] + numbers[(counted/2)-1]) / 2), nil
+	return pointer((numbers[counted/2] + numbers[(counted/2)-1]) / 2), nil
 }

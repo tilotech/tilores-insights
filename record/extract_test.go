@@ -6,7 +6,6 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/tilotech/tilores-insights/helpers"
 	"github.com/tilotech/tilores-insights/record"
 	api "github.com/tilotech/tilores-plugin-api"
 )
@@ -166,19 +165,19 @@ func TestExtractNumber(t *testing.T) {
 			expectError: true,
 		},
 		"int": {
-			expected: helpers.NullifyFloat(123.0),
+			expected: pointer(123.0),
 		},
 		"float": {
-			expected: helpers.NullifyFloat(123.4),
+			expected: pointer(123.4),
 		},
 		"nullValue": {
 			expected: nil,
 		},
 		"numericText": {
-			expected: helpers.NullifyFloat(123.0),
+			expected: pointer(123.0),
 		},
 		"exponent": {
-			expected: helpers.NullifyFloat(1000.0),
+			expected: pointer(1000.0),
 		},
 		"nested": {
 			expectError: true,
@@ -242,48 +241,48 @@ func TestExtractString(t *testing.T) {
 		caseSensitive bool
 	}{
 		"bool": {
-			expected: helpers.NullifyString("true"),
+			expected: pointer("true"),
 		},
 		"int": {
-			expected: helpers.NullifyString("123"),
+			expected: pointer("123"),
 		},
 		"float": {
-			expected: helpers.NullifyString("123.4"),
+			expected: pointer("123.4"),
 		},
 		"nullValue": {
 			expected: nil,
 		},
 		"numericText": {
-			expected: helpers.NullifyString("123"),
+			expected: pointer("123"),
 		},
 		"exponent": {
-			expected: helpers.NullifyString("1e3"),
+			expected: pointer("1e3"),
 		},
 		"nested": {
 			caseSensitive: true,
-			expected:      helpers.NullifyString(`{"propA":"valA","propB":"valB"}`),
+			expected:      pointer(`{"propA":"valA","propB":"valB"}`),
 		},
 		"keepUpper": {
 			caseSensitive: true,
-			expected:      helpers.NullifyString("Has Upper Case"),
+			expected:      pointer("Has Upper Case"),
 		},
 		"caseInsensitive": {
-			expected: helpers.NullifyString("has upper case"),
+			expected: pointer("has upper case"),
 		},
 		"list.0": {
-			expected: helpers.NullifyString("abc"),
+			expected: pointer("abc"),
 		},
 		"list.1": {
-			expected: helpers.NullifyString("def"),
+			expected: pointer("def"),
 		},
 		"list.2": {
-			expected: helpers.NullifyString("geh"),
+			expected: pointer("geh"),
 		},
 		"list": {
-			expected: helpers.NullifyString(`["abc","def","geh"]`),
+			expected: pointer(`["abc","def","geh"]`),
 		},
 		"emptyString": {
-			expected: helpers.NullifyString(""),
+			expected: pointer(""),
 		},
 	}
 

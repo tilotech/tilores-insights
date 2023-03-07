@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/tilotech/tilores-insights/helpers"
 	"github.com/tilotech/tilores-insights/record"
 	api "github.com/tilotech/tilores-plugin-api"
 )
@@ -56,7 +55,7 @@ func TestMax(t *testing.T) {
 				},
 				nil,
 			},
-			expected: helpers.NullifyFloat(10.0),
+			expected: pointer(10.0),
 		},
 		"list with non numbers values causes an error": {
 			records: []*api.Record{
