@@ -12,6 +12,14 @@ type FrequencyDistributionEntry struct {
 	Percentage float64 `json:"percentage"`
 }
 
+// FrequencyDistribution returns how often a non-null value for the provided
+// field is present.
+//
+// By default, the results are ordered with the highest percentage first, but
+// it can be changed using the 'sortASC' option.
+//
+// Using the 'top' option it is possible to limit the results to only the n
+// highest or lowest results.
 func FrequencyDistribution(records []*api.Record, path string, caseSensitive bool, top int, sortASC bool) ([]*FrequencyDistributionEntry, error) {
 	entriesMap := make(map[string]*FrequencyDistributionEntry, len(records))
 	counted := 0

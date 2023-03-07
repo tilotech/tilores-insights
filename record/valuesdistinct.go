@@ -4,6 +4,8 @@ import (
 	api "github.com/tilotech/tilores-plugin-api"
 )
 
+// ValuesDistinct returns all unique non-null values of the current records.
+// By default, the case of the value is ignored.
 func ValuesDistinct(records []*api.Record, path string, caseSensitive bool) ([]any, error) {
 	unique := make(map[string]any, len(records))
 	for _, record := range records {
