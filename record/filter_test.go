@@ -18,18 +18,21 @@ func TestFilter(t *testing.T) {
 				"foo": "bar",
 				"faz": "BAZ",
 			},
+			"numeric": 12.3,
 		},
 	}
 	r2 := &api.Record{
 		ID: "r2",
 		Data: map[string]any{
-			"value": "string B",
+			"value":   "string B",
+			"numeric": "123",
 		},
 	}
 	r3 := &api.Record{
 		ID: "r3",
 		Data: map[string]any{
-			"value": "other string A",
+			"value":   "other string A",
+			"numeric": 1234.0,
 		},
 	}
 	defaultRecords := []*api.Record{
@@ -297,6 +300,166 @@ func TestFilter(t *testing.T) {
 				{
 					Path:      "value",
 					LikeRegex: pointer(`foo(`),
+				},
+			},
+			expectError: true,
+		},
+		"less than": {
+			records: defaultRecords,
+			conditions: []*insights.FilterCondition{
+				{
+					Path:     "numeric",
+					LessThan: pointer(150.0),
+				},
+			},
+			expected: []*api.Record{r1, r2},
+		},
+		"less than, equal second record": {
+			records: defaultRecords,
+			conditions: []*insights.FilterCondition{
+				{
+					Path:     "numeric",
+					LessThan: pointer(123.0),
+				},
+			},
+			expected: []*api.Record{r1},
+		},
+		"less than, nil value": {
+			records: defaultRecords,
+			conditions: []*insights.FilterCondition{
+				{
+					Path:     "does not exist",
+					LessThan: pointer(150.0),
+				},
+			},
+			expected: []*api.Record{},
+		},
+		"less than, not a number": {
+			records: defaultRecords,
+			conditions: []*insights.FilterCondition{
+				{
+					Path:     "value",
+					LessThan: pointer(150.0),
+				},
+			},
+			expectError: true,
+		},
+		"less equal": {
+			records: defaultRecords,
+			conditions: []*insights.FilterCondition{
+				{
+					Path:      "numeric",
+					LessEqual: pointer(150.0),
+				},
+			},
+			expected: []*api.Record{r1, r2},
+		},
+		"less equal, equal second record": {
+			records: defaultRecords,
+			conditions: []*insights.FilterCondition{
+				{
+					Path:      "numeric",
+					LessEqual: pointer(123.0),
+				},
+			},
+			expected: []*api.Record{r1, r2},
+		},
+		"less equal, nil value": {
+			records: defaultRecords,
+			conditions: []*insights.FilterCondition{
+				{
+					Path:      "does not exist",
+					LessEqual: pointer(150.0),
+				},
+			},
+			expected: []*api.Record{},
+		},
+		"less equal, not a number": {
+			records: defaultRecords,
+			conditions: []*insights.FilterCondition{
+				{
+					Path:      "value",
+					LessEqual: pointer(150.0),
+				},
+			},
+			expectError: true,
+		},
+		"greater than": {
+			records: defaultRecords,
+			conditions: []*insights.FilterCondition{
+				{
+					Path:        "numeric",
+					GreaterThan: pointer(100.0),
+				},
+			},
+			expected: []*api.Record{r2, r3},
+		},
+		"greater than, equal second record": {
+			records: defaultRecords,
+			conditions: []*insights.FilterCondition{
+				{
+					Path:        "numeric",
+					GreaterThan: pointer(123.0),
+				},
+			},
+			expected: []*api.Record{r3},
+		},
+		"greater than, nil value": {
+			records: defaultRecords,
+			conditions: []*insights.FilterCondition{
+				{
+					Path:        "does not exist",
+					GreaterThan: pointer(100.0),
+				},
+			},
+			expected: []*api.Record{},
+		},
+		"greater than, not a number": {
+			records: defaultRecords,
+			conditions: []*insights.FilterCondition{
+				{
+					Path:        "value",
+					GreaterThan: pointer(100.0),
+				},
+			},
+			expectError: true,
+		},
+		"greater equal": {
+			records: defaultRecords,
+			conditions: []*insights.FilterCondition{
+				{
+					Path:         "numeric",
+					GreaterEqual: pointer(100.0),
+				},
+			},
+			expected: []*api.Record{r2, r3},
+		},
+		"greater equal, equal second record": {
+			records: defaultRecords,
+			conditions: []*insights.FilterCondition{
+				{
+					Path:         "numeric",
+					GreaterEqual: pointer(123.0),
+				},
+			},
+			expected: []*api.Record{r2, r3},
+		},
+		"greater equal, nil value": {
+			records: defaultRecords,
+			conditions: []*insights.FilterCondition{
+				{
+					Path:         "does not exist",
+					GreaterEqual: pointer(100.0),
+				},
+			},
+			expected: []*api.Record{},
+		},
+		"greater equal, not a number": {
+			records: defaultRecords,
+			conditions: []*insights.FilterCondition{
+				{
+					Path:         "value",
+					GreaterEqual: pointer(100.0),
 				},
 			},
 			expectError: true,

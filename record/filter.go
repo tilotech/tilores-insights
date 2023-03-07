@@ -73,6 +73,9 @@ func checkFilterConditions(record *api.Record, conditions []*FilterCondition) (b
 		if keep, err := checkFilterStringCriteria(record, condition); !keep || err != nil {
 			return keep, err
 		}
+		if keep, err := checkFilterNumericCriteria(record, condition); !keep || err != nil {
+			return keep, err
+		}
 	}
 	return true, nil
 }
@@ -88,7 +91,18 @@ func checkFilterCriteriaIsNull(record *api.Record, condition *FilterCondition) b
 	return value != nil
 }
 
+func hasFilterStringCriteria(condition *FilterCondition) bool {
+	return condition.Equal != nil ||
+		condition.StartsWith != nil ||
+		condition.EndsWith != nil ||
+		condition.LikeRegex != nil
+}
+
 func checkFilterStringCriteria(record *api.Record, condition *FilterCondition) (bool, error) {
+	if !hasFilterStringCriteria(condition) {
+		return true, nil
+	}
+
 	caseSensitive := false
 	if condition.CaseSensitive != nil {
 		caseSensitive = *condition.CaseSensitive
@@ -172,4 +186,63 @@ func checkFilterCriteriaLikeRegex(value *string, likeRegex *string, caseSensitiv
 		return false, err
 	}
 	return r.MatchString(*value), nil
+}
+
+func hasFilterNumericCriteria(condition *FilterCondition) bool {
+	return condition.LessThan != nil ||
+		condition.LessEqual != nil ||
+		condition.GreaterThan != nil ||
+		condition.GreaterEqual != nil
+}
+
+func checkFilterNumericCriteria(record *api.Record, condition *FilterCondition) (bool, error) {
+	if !hasFilterNumericCriteria(condition) {
+		return true, nil
+	}
+
+	value, err := ExtractNumber(record, condition.Path)
+	if err != nil {
+		return false, err
+	}
+
+	if !checkFilterCriteriaCompareNumber(value, condition.LessThan, checkFilterOpLessThan) {
+		return false, nil
+	}
+	if !checkFilterCriteriaCompareNumber(value, condition.LessEqual, checkFilterOpLessEqual) {
+		return false, nil
+	}
+	if !checkFilterCriteriaCompareNumber(value, condition.GreaterThan, checkFilterOpGreaterThan) {
+		return false, nil
+	}
+	if !checkFilterCriteriaCompareNumber(value, condition.GreaterEqual, checkFilterOpGreaterEqual) {
+		return false, nil
+	}
+
+	return true, nil
+}
+
+func checkFilterCriteriaCompareNumber(value *float64, test *float64, op func(a, b float64) bool) bool {
+	if test == nil {
+		return true
+	}
+	if value == nil {
+		return false
+	}
+	return op(*value, *test)
+}
+
+func checkFilterOpLessThan(a, b float64) bool {
+	return a < b
+}
+
+func checkFilterOpLessEqual(a, b float64) bool {
+	return a <= b
+}
+
+func checkFilterOpGreaterThan(a, b float64) bool {
+	return a > b
+}
+
+func checkFilterOpGreaterEqual(a, b float64) bool {
+	return a >= b
 }
