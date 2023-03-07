@@ -32,26 +32,26 @@ func TestMin(t *testing.T) {
 		"list with different values": {
 			records: []*api.Record{
 				{
-					"someid",
-					map[string]interface{}{
+					ID: "someid",
+					Data: map[string]interface{}{
 						"num": "5",
 					},
 				},
 				{
-					"someid",
-					map[string]interface{}{
+					ID: "someid",
+					Data: map[string]interface{}{
 						"num": "10.0",
 					},
 				},
 				{
-					"someid",
-					map[string]interface{}{
+					ID: "someid",
+					Data: map[string]interface{}{
 						"num": "1",
 					},
 				},
 				{
-					"someid",
-					map[string]interface{}{},
+					ID:   "someid",
+					Data: map[string]interface{}{},
 				},
 				nil,
 			},
@@ -60,20 +60,20 @@ func TestMin(t *testing.T) {
 		"list with non numbers values causes an error": {
 			records: []*api.Record{
 				{
-					"someid",
-					map[string]interface{}{
+					ID: "someid",
+					Data: map[string]interface{}{
 						"num": "10.0",
 					},
 				},
 				{
-					"someid",
-					map[string]interface{}{
+					ID: "someid",
+					Data: map[string]interface{}{
 						"num": "not number",
 					},
 				},
 				{
-					"someid",
-					map[string]interface{}{
+					ID: "someid",
+					Data: map[string]interface{}{
 						"num": "0",
 					},
 				},

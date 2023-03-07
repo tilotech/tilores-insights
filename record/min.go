@@ -6,6 +6,10 @@ import (
 	api "github.com/tilotech/tilores-plugin-api"
 )
 
+// Min returns the lowest value of the provided numeric path.
+//
+// Using min on non-numeric paths will raise an error.
+// Returns null if all values are null.
 func Min(records []*api.Record, path string) (*float64, error) {
 	if len(records) == 0 {
 		return nil, nil

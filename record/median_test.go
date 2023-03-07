@@ -32,26 +32,26 @@ func TestMedian(t *testing.T) {
 		"list with odd number of different values": {
 			records: []*api.Record{
 				{
-					"someid",
-					map[string]interface{}{
+					ID: "someid",
+					Data: map[string]interface{}{
 						"num": "5",
 					},
 				},
 				{
-					"someid",
-					map[string]interface{}{
+					ID: "someid",
+					Data: map[string]interface{}{
 						"num": "10.0",
 					},
 				},
 				{
-					"someid",
-					map[string]interface{}{
+					ID: "someid",
+					Data: map[string]interface{}{
 						"num": "1",
 					},
 				},
 				{
-					"someid",
-					map[string]interface{}{},
+					ID:   "someid",
+					Data: map[string]interface{}{},
 				},
 				nil,
 			},
@@ -60,32 +60,32 @@ func TestMedian(t *testing.T) {
 		"list with even number of different values": {
 			records: []*api.Record{
 				{
-					"someid",
-					map[string]interface{}{
+					ID: "someid",
+					Data: map[string]interface{}{
 						"num": "4",
 					},
 				},
 				{
-					"someid",
-					map[string]interface{}{
+					ID: "someid",
+					Data: map[string]interface{}{
 						"num": "10.0",
 					},
 				},
 				{
-					"someid",
-					map[string]interface{}{
+					ID: "someid",
+					Data: map[string]interface{}{
 						"num": "6",
 					},
 				},
 				{
-					"someid",
-					map[string]interface{}{
+					ID: "someid",
+					Data: map[string]interface{}{
 						"num": "1",
 					},
 				},
 				{
-					"someid",
-					map[string]interface{}{},
+					ID:   "someid",
+					Data: map[string]interface{}{},
 				},
 				nil,
 			},
@@ -93,8 +93,8 @@ func TestMedian(t *testing.T) {
 		}, "list with one value": {
 			records: []*api.Record{
 				{
-					"someid",
-					map[string]interface{}{
+					ID: "someid",
+					Data: map[string]interface{}{
 						"num": "4",
 					},
 				},
@@ -104,20 +104,20 @@ func TestMedian(t *testing.T) {
 		"list with non numbers values causes an error": {
 			records: []*api.Record{
 				{
-					"someid",
-					map[string]interface{}{
+					ID: "someid",
+					Data: map[string]interface{}{
 						"num": "10.0",
 					},
 				},
 				{
-					"someid",
-					map[string]interface{}{
+					ID: "someid",
+					Data: map[string]interface{}{
 						"num": "not number",
 					},
 				},
 				{
-					"someid",
-					map[string]interface{}{
+					ID: "someid",
+					Data: map[string]interface{}{
 						"num": "0",
 					},
 				},
