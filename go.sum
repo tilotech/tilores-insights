@@ -12,6 +12,8 @@ github.com/stretchr/testify v1.8.2 h1:+h33VjcLVPDHtOdpUCuF+7gSuG3yGIftsP1YvFihtJ
 github.com/stretchr/testify v1.8.2/go.mod h1:w2LPCIKwWwSfY2zedu0+kehJoqGctiVI29o6fzry7u4=
 github.com/tilotech/tilores-plugin-api v0.7.1 h1:BGhEq7gvNREuUtRZimeN45ZehvmmQ+P4qgLsMnak+2s=
 github.com/tilotech/tilores-plugin-api v0.7.1/go.mod h1:P1s6riSpuMoHR/GxtOb+7DYdbPbHhh96tyoh4PXA2WU=
+gitlab.com/tilotech/go-helpers v1.2.0 h1:3fqRBA/fHf84Rv7DOLmvJ6OZp2mRF/aKJkgkI54H+o8=
+gitlab.com/tilotech/go-helpers v1.2.0/go.mod h1:2M1kv4BJKQ0WM3MZXUsXuUjOvp4r/D3nIBMMaZ5q54I=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405 h1:yhCVgyC4o1eVCa2tZl7eS0r+SDo693bJlVdllGtEeKM=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
 gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c/go.mod h1:K4uyk7z7BCEPqu6E+C64Yfv1cQ7kz7rIZviUmN+EgEM=

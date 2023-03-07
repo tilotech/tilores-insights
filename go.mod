@@ -5,6 +5,7 @@ go 1.19
 require (
 	github.com/stretchr/testify v1.8.2
 	github.com/tilotech/tilores-plugin-api v0.7.1
+	gitlab.com/tilotech/go-helpers v1.2.0
 )
 
 require (
