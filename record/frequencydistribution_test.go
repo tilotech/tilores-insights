@@ -359,6 +359,12 @@ func TestFrequencyDistribution(t *testing.T) {
 				},
 			},
 		},
+		"top 0 returns an empty table": {
+			records:  testRecords,
+			path:     "nestedCase",
+			top:      0,
+			expected: []*record.FrequencyDistributionEntry{},
+		},
 	}
 
 	for name, c := range cases {

@@ -22,6 +22,9 @@ type FrequencyDistributionEntry struct {
 // Using the 'top' option it is possible to limit the results to only the n
 // highest or lowest results.
 func FrequencyDistribution(records []*api.Record, path string, caseSensitive bool, top int, sortASC bool) ([]*FrequencyDistributionEntry, error) {
+	if top == 0 {
+		return []*FrequencyDistributionEntry{}, nil
+	}
 	entriesMap := make(map[string]*FrequencyDistributionEntry, len(records))
 	counted := 0
 	for _, record := range records {
