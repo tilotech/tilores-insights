@@ -11,9 +11,6 @@ github.com/stretchr/testify/require
 # github.com/tilotech/tilores-plugin-api v0.7.1
 ## explicit; go 1.17
 github.com/tilotech/tilores-plugin-api
-# gitlab.com/tilotech/go-helpers v1.2.0
-## explicit; go 1.17
-gitlab.com/tilotech/go-helpers/stringset
 # gopkg.in/yaml.v3 v3.0.1
 ## explicit
 gopkg.in/yaml.v3

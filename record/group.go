@@ -1,8 +1,6 @@
 package record
 
 import (
-	"fmt"
-
 	api "github.com/tilotech/tilores-plugin-api"
 )
 
@@ -16,17 +14,9 @@ func Group(records []*api.Record, paths []string, caseSensitive bool) ([][]*api.
 	idx := make(map[string]int, len(records))
 
 	for _, record := range records {
-		key := ""
-		for _, path := range paths {
-			s, err := ExtractString(record, path, caseSensitive)
-			if err != nil {
-				return nil, err
-			}
-			if s == nil {
-				key += ":n:"
-			} else {
-				key += fmt.Sprintf(":s:%v", *s)
-			}
+		key, err := extractStringKeys(record, paths, caseSensitive)
+		if err != nil {
+			return nil, err
 		}
 		i, ok := idx[key]
 		if !ok {
