@@ -109,4 +109,18 @@ func ExtractTime(record *api.Record, path string) (*time.Time, error) {
 	return &t, nil
 }
 
-// TODO: Add extract multi path string
+func extractStringKeys(record *api.Record, paths []string, caseSensitive bool) (string, error) {
+	key := ""
+	for _, path := range paths {
+		s, err := ExtractString(record, path, caseSensitive)
+		if err != nil {
+			return "", err
+		}
+		if s == nil {
+			key += ":n:"
+		} else {
+			key += fmt.Sprintf(":s:%v", *s)
+		}
+	}
+	return key, nil
+}
