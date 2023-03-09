@@ -80,6 +80,29 @@ func TestMax(t *testing.T) {
 			},
 			expectError: true,
 		},
+		"list with all negative values": {
+			records: []*api.Record{
+				{
+					ID: "someid",
+					Data: map[string]any{
+						"num": -10.0,
+					},
+				},
+				{
+					ID: "someid",
+					Data: map[string]any{
+						"num": -1.0,
+					},
+				},
+				{
+					ID: "someid",
+					Data: map[string]any{
+						"num": -3.0,
+					},
+				},
+			},
+			expected: pointer(-1.0),
+		},
 	}
 
 	for name, c := range cases {
