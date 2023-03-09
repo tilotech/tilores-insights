@@ -121,4 +121,18 @@ func ExtractArray(record *api.Record, path string) ([]any, error) {
 	return nil, fmt.Errorf("invalid type while extracting array from path %v, received %T", path, val)
 }
 
-// TODO: Add extract multi path string
+func extractStringKeys(record *api.Record, paths []string, caseSensitive bool) (string, error) {
+	key := ""
+	for _, path := range paths {
+		s, err := ExtractString(record, path, caseSensitive)
+		if err != nil {
+			return "", err
+		}
+		if s == nil {
+			key += ":n:"
+		} else {
+			key += fmt.Sprintf(":s:%v", *s)
+		}
+	}
+	return key, nil
+}
