@@ -59,7 +59,7 @@ func FrequencyDistribution(records []*api.Record, path string, caseSensitive boo
 		}
 	}
 	sort.Slice(result, sortFunc)
-	if top > 0 {
+	if top > 0 && top < len(result) {
 		return result[0:top], nil
 	}
 	return result, nil
