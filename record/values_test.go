@@ -12,8 +12,8 @@ func TestValues(t *testing.T) {
 	testRecords := []*api.Record{
 		{
 			ID: "someid",
-			Data: map[string]interface{}{
-				"nested": map[string]interface{}{
+			Data: map[string]any{
+				"nested": map[string]any{
 					"field1": "a",
 					"field2": "b",
 				},
@@ -21,8 +21,8 @@ func TestValues(t *testing.T) {
 		},
 		{
 			ID: "someid",
-			Data: map[string]interface{}{
-				"nested": map[string]interface{}{
+			Data: map[string]any{
+				"nested": map[string]any{
 					"field1": "c",
 					"field2": "d",
 				},
@@ -30,32 +30,32 @@ func TestValues(t *testing.T) {
 		},
 		{
 			ID: "someid",
-			Data: map[string]interface{}{
-				"nested": map[string]interface{}{
+			Data: map[string]any{
+				"nested": map[string]any{
 					"field2": "b",
 				},
 			},
 		},
 		{
 			ID: "someid",
-			Data: map[string]interface{}{
-				"nested": map[string]interface{}{
+			Data: map[string]any{
+				"nested": map[string]any{
 					"field1": "a",
 				},
 			},
 		},
 		{
 			ID: "someid",
-			Data: map[string]interface{}{
-				"nested": map[string]interface{}{
+			Data: map[string]any{
+				"nested": map[string]any{
 					"field1": "A",
 					"field2": "b",
 				},
 			},
 		}, {
 			ID: "someid",
-			Data: map[string]interface{}{
-				"nested": map[string]interface{}{
+			Data: map[string]any{
+				"nested": map[string]any{
 					"field1": "a",
 					"field2": "b",
 					"field3": "e",
@@ -64,7 +64,7 @@ func TestValues(t *testing.T) {
 		},
 		{
 			ID:   "someid",
-			Data: map[string]interface{}{},
+			Data: map[string]any{},
 		},
 		nil,
 	}
@@ -92,18 +92,18 @@ func TestValues(t *testing.T) {
 			records: testRecords,
 			path:    "nested",
 			expected: []any{
-				map[string]interface{}{
+				map[string]any{
 					"field1": "a",
 					"field2": "b",
 				},
-				map[string]interface{}{
+				map[string]any{
 					"field1": "c",
 					"field2": "d",
 				},
-				map[string]interface{}{
+				map[string]any{
 					"field2": "b",
 				},
-				map[string]interface{}{
+				map[string]any{
 					"field1": "a",
 				},
 				map[string]interface{}{

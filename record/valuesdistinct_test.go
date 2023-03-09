@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"github.com/tilotech/tilores-insights/record"
 	api "github.com/tilotech/tilores-plugin-api"
 )
@@ -12,8 +13,8 @@ func TestValuesDistinct(t *testing.T) {
 	testRecords := []*api.Record{
 		{
 			ID: "someid",
-			Data: map[string]interface{}{
-				"nested": map[string]interface{}{
+			Data: map[string]any{
+				"nested": map[string]any{
 					"field1": "a",
 					"field2": "b",
 				},
@@ -21,8 +22,8 @@ func TestValuesDistinct(t *testing.T) {
 		},
 		{
 			ID: "someid",
-			Data: map[string]interface{}{
-				"nested": map[string]interface{}{
+			Data: map[string]any{
+				"nested": map[string]any{
 					"field1": "c",
 					"field2": "d",
 				},
@@ -30,16 +31,16 @@ func TestValuesDistinct(t *testing.T) {
 		},
 		{
 			ID: "someid",
-			Data: map[string]interface{}{
-				"nested": map[string]interface{}{
+			Data: map[string]any{
+				"nested": map[string]any{
 					"field2": "b",
 				},
 			},
 		},
 		{
 			ID: "someid",
-			Data: map[string]interface{}{
-				"nested": map[string]interface{}{
+			Data: map[string]any{
+				"nested": map[string]any{
 					"field1": "a",
 				},
 			},
@@ -154,7 +155,8 @@ func TestValuesDistinct(t *testing.T) {
 
 	for name, c := range cases {
 		t.Run(name, func(t *testing.T) {
-			actual, _ := record.ValuesDistinct(c.records, c.path, c.caseSensitive)
+			actual, err := record.ValuesDistinct(c.records, c.path, c.caseSensitive)
+			require.NoError(t, err)
 			assert.ElementsMatch(t, c.expected, actual)
 		})
 	}

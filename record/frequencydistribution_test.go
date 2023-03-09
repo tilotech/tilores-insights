@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"github.com/tilotech/tilores-insights/record"
 	api "github.com/tilotech/tilores-plugin-api"
 )
@@ -12,8 +13,8 @@ func TestFrequencyDistribution(t *testing.T) {
 	testRecords := []*api.Record{
 		{
 			ID: "someid",
-			Data: map[string]interface{}{
-				"nested": map[string]interface{}{
+			Data: map[string]any{
+				"nested": map[string]any{
 					"field1": "a",
 					"field2": "b",
 				},
@@ -21,8 +22,8 @@ func TestFrequencyDistribution(t *testing.T) {
 		},
 		{
 			ID: "someid",
-			Data: map[string]interface{}{
-				"nested": map[string]interface{}{
+			Data: map[string]any{
+				"nested": map[string]any{
 					"field1": "c",
 					"field2": "d",
 				},
@@ -30,32 +31,32 @@ func TestFrequencyDistribution(t *testing.T) {
 		},
 		{
 			ID: "someid",
-			Data: map[string]interface{}{
-				"nested": map[string]interface{}{
+			Data: map[string]any{
+				"nested": map[string]any{
 					"field2": "b",
 				},
 			},
 		},
 		{
 			ID: "someid",
-			Data: map[string]interface{}{
-				"nested": map[string]interface{}{
+			Data: map[string]any{
+				"nested": map[string]any{
 					"field1": "a",
 				},
 			},
 		},
 		{
 			ID: "someid",
-			Data: map[string]interface{}{
-				"nested": map[string]interface{}{
+			Data: map[string]any{
+				"nested": map[string]any{
 					"field1": "A",
 					"field2": "b",
 				},
 			},
 		}, {
 			ID: "someid",
-			Data: map[string]interface{}{
-				"nested": map[string]interface{}{
+			Data: map[string]any{
+				"nested": map[string]any{
 					"field1": "a",
 					"field2": "b",
 					"field3": "e",
@@ -64,7 +65,7 @@ func TestFrequencyDistribution(t *testing.T) {
 		},
 		{
 			ID:   "someid",
-			Data: map[string]interface{}{},
+			Data: map[string]any{},
 		},
 		nil,
 	}
@@ -147,7 +148,7 @@ func TestFrequencyDistribution(t *testing.T) {
 			records: testRecords,
 			path:    "nested",
 			expectedFirst: &record.FrequencyDistributionEntry{
-				Value: map[string]interface{}{
+				Value: map[string]any{
 					"field1": "a",
 					"field2": "b",
 				},
@@ -156,7 +157,7 @@ func TestFrequencyDistribution(t *testing.T) {
 			},
 			expected: []*record.FrequencyDistributionEntry{
 				{
-					Value: map[string]interface{}{
+					Value: map[string]any{
 						"field1": "a",
 						"field2": "b",
 					},
@@ -401,7 +402,8 @@ func TestFrequencyDistribution(t *testing.T) {
 
 	for name, c := range cases {
 		t.Run(name, func(t *testing.T) {
-			actual, _ := record.FrequencyDistribution(c.records, c.path, c.caseSensitive, c.top, c.sortASC)
+			actual, err := record.FrequencyDistribution(c.records, c.path, c.caseSensitive, c.top, c.sortASC)
+			require.NoError(t, err)
 			if c.top < 1 {
 				assert.ElementsMatch(t, c.expected, actual)
 			}

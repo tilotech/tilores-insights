@@ -33,25 +33,25 @@ func TestSum(t *testing.T) {
 			records: []*api.Record{
 				{
 					ID: "someid",
-					Data: map[string]interface{}{
+					Data: map[string]any{
 						"num": "5",
 					},
 				},
 				{
 					ID: "someid",
-					Data: map[string]interface{}{
+					Data: map[string]any{
 						"num": "10.0",
 					},
 				},
 				{
 					ID: "someid",
-					Data: map[string]interface{}{
+					Data: map[string]any{
 						"num": "0",
 					},
 				},
 				{
 					ID:   "someid",
-					Data: map[string]interface{}{},
+					Data: map[string]any{},
 				},
 				nil,
 			},
@@ -61,19 +61,19 @@ func TestSum(t *testing.T) {
 			records: []*api.Record{
 				{
 					ID: "someid",
-					Data: map[string]interface{}{
+					Data: map[string]any{
 						"num": "10.0",
 					},
 				},
 				{
 					ID: "someid",
-					Data: map[string]interface{}{
+					Data: map[string]any{
 						"num": "not number",
 					},
 				},
 				{
 					ID: "someid",
-					Data: map[string]interface{}{
+					Data: map[string]any{
 						"num": "0",
 					},
 				},

@@ -33,25 +33,25 @@ func TestMedian(t *testing.T) {
 			records: []*api.Record{
 				{
 					ID: "someid",
-					Data: map[string]interface{}{
+					Data: map[string]any{
 						"num": "5",
 					},
 				},
 				{
 					ID: "someid",
-					Data: map[string]interface{}{
+					Data: map[string]any{
 						"num": "10.0",
 					},
 				},
 				{
 					ID: "someid",
-					Data: map[string]interface{}{
+					Data: map[string]any{
 						"num": "1",
 					},
 				},
 				{
 					ID:   "someid",
-					Data: map[string]interface{}{},
+					Data: map[string]any{},
 				},
 				nil,
 			},
@@ -61,31 +61,31 @@ func TestMedian(t *testing.T) {
 			records: []*api.Record{
 				{
 					ID: "someid",
-					Data: map[string]interface{}{
+					Data: map[string]any{
 						"num": "4",
 					},
 				},
 				{
 					ID: "someid",
-					Data: map[string]interface{}{
+					Data: map[string]any{
 						"num": "10.0",
 					},
 				},
 				{
 					ID: "someid",
-					Data: map[string]interface{}{
+					Data: map[string]any{
 						"num": "6",
 					},
 				},
 				{
 					ID: "someid",
-					Data: map[string]interface{}{
+					Data: map[string]any{
 						"num": "1",
 					},
 				},
 				{
 					ID:   "someid",
-					Data: map[string]interface{}{},
+					Data: map[string]any{},
 				},
 				nil,
 			},
@@ -94,7 +94,7 @@ func TestMedian(t *testing.T) {
 			records: []*api.Record{
 				{
 					ID: "someid",
-					Data: map[string]interface{}{
+					Data: map[string]any{
 						"num": "4",
 					},
 				},
@@ -105,19 +105,19 @@ func TestMedian(t *testing.T) {
 			records: []*api.Record{
 				{
 					ID: "someid",
-					Data: map[string]interface{}{
+					Data: map[string]any{
 						"num": "10.0",
 					},
 				},
 				{
 					ID: "someid",
-					Data: map[string]interface{}{
+					Data: map[string]any{
 						"num": "not number",
 					},
 				},
 				{
 					ID: "someid",
-					Data: map[string]interface{}{
+					Data: map[string]any{
 						"num": "0",
 					},
 				},
