@@ -38,5 +38,3 @@ func StandardDeviation(records []*api.Record, path string) (*float64, error) {
 	}
 	return pointer(math.Sqrt(difSquareSum / counted)), nil
 }
-
-// TODO: Add text standard deviation
