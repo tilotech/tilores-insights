@@ -109,6 +109,18 @@ func ExtractTime(record *api.Record, path string) (*time.Time, error) {
 	return &t, nil
 }
 
+// ExtractArray provides an array value of a record for the given path.
+func ExtractArray(record *api.Record, path string) ([]any, error) {
+	val := Extract(record, path)
+	if val == nil {
+		return nil, nil
+	}
+	if arr, ok := val.([]any); ok {
+		return arr, nil
+	}
+	return nil, fmt.Errorf("invalid type while extracting array from path %v, received %T", path, val)
+}
+
 func extractStringKeys(record *api.Record, paths []string, caseSensitive bool) (string, error) {
 	key := ""
 	for _, path := range paths {
