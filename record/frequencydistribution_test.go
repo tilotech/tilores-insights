@@ -117,16 +117,19 @@ func TestFrequencyDistribution(t *testing.T) {
 		"empty list": {
 			records:  []*api.Record{},
 			path:     "field1",
+			top:      -1,
 			expected: []*record.FrequencyDistributionEntry{},
 		},
 		"nil list": {
 			records:  nil,
 			path:     "field1",
+			top:      -1,
 			expected: []*record.FrequencyDistributionEntry{},
 		},
 		"on field": {
 			records: testRecords,
 			path:    "field1",
+			top:     -1,
 			expected: []*record.FrequencyDistributionEntry{
 				{
 					Value:      "a",
@@ -183,6 +186,7 @@ func TestFrequencyDistribution(t *testing.T) {
 			records: testRecords,
 			path:    "field1",
 			sortASC: true,
+			top:     -1,
 			expected: []*record.FrequencyDistributionEntry{
 				{
 					Value:      "c",
@@ -204,6 +208,7 @@ func TestFrequencyDistribution(t *testing.T) {
 		"on object": {
 			records: testRecords,
 			path:    "nested",
+			top:     -1,
 			expected: []*record.FrequencyDistributionEntry{
 				{
 					Value: map[string]any{
@@ -257,6 +262,7 @@ func TestFrequencyDistribution(t *testing.T) {
 			records: testRecords,
 			path:    "nested",
 			sortASC: true,
+			top:     -1,
 			expected: []*record.FrequencyDistributionEntry{
 				{
 					Value: map[string]interface{}{
@@ -288,6 +294,7 @@ func TestFrequencyDistribution(t *testing.T) {
 			records:       testRecords,
 			path:          "case",
 			caseSensitive: true,
+			top:           -1,
 			expected: []*record.FrequencyDistributionEntry{
 				{
 					Value:      "a",
@@ -311,6 +318,7 @@ func TestFrequencyDistribution(t *testing.T) {
 			path:          "case",
 			caseSensitive: true,
 			sortASC:       true,
+			top:           -1,
 			expected: []*record.FrequencyDistributionEntry{
 				{
 					Value:      "A",
@@ -333,6 +341,7 @@ func TestFrequencyDistribution(t *testing.T) {
 			records:       testRecords,
 			path:          "nestedCase",
 			caseSensitive: true,
+			top:           -1,
 			expected: []*record.FrequencyDistributionEntry{
 				{
 					Value: map[string]any{
@@ -358,6 +367,12 @@ func TestFrequencyDistribution(t *testing.T) {
 					Percentage: 0.16666666666666666,
 				},
 			},
+		},
+		"top 0 returns an empty table": {
+			records:  testRecords,
+			path:     "nestedCase",
+			top:      0,
+			expected: []*record.FrequencyDistributionEntry{},
 		},
 	}
 
