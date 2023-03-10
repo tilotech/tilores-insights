@@ -24,7 +24,7 @@ func Confidence(records []*api.Record, path string, caseSensitive bool) (*float6
 		return nil, nil
 	}
 	frequencies := make(map[string]int, len(records))
-	counter := 0
+	valueCount := 0
 
 	for _, record := range records {
 		val, err := ExtractString(record, path, caseSensitive)
@@ -32,7 +32,7 @@ func Confidence(records []*api.Record, path string, caseSensitive bool) (*float6
 			return nil, err
 		}
 		if val != nil {
-			counter++
+			valueCount++
 			if _, ok := frequencies[*val]; !ok {
 				frequencies[*val] = 1
 			} else {
@@ -40,13 +40,13 @@ func Confidence(records []*api.Record, path string, caseSensitive bool) (*float6
 			}
 		}
 	}
-	if counter == 0 {
+	if valueCount == 0 {
 		return nil, nil
 	}
 	probSum := 0.0
 	for _, freq := range frequencies {
-		prob := float64(freq) / float64(counter)
+		prob := float64(freq) / float64(valueCount)
 		probSum += prob * float64(freq)
 	}
-	return pointer(probSum / float64(counter)), nil
+	return pointer(probSum / float64(valueCount)), nil
 }
