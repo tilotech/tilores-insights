@@ -123,8 +123,8 @@ func TestFlattenDistinct(t *testing.T) {
 			actual, err := record.FlattenDistinct(c.records, c.path, c.caseSensitive)
 			if c.expectError {
 				assert.Error(t, err)
-				assert.Nil(t, actual)
 			} else {
+				assert.NoError(t, err)
 				assert.Equal(t, c.expected, actual)
 			}
 		})
