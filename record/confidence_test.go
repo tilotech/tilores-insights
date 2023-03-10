@@ -4,70 +4,71 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"github.com/tilotech/tilores-insights/record"
 	api "github.com/tilotech/tilores-plugin-api"
 )
 
-func TestStandardDeviationText(t *testing.T) {
+func TestConfidence(t *testing.T) {
 	testRecords := []*api.Record{
 		{
 			ID: "someid",
 			Data: map[string]any{
-				"text": "3 times",
+				"text": "a",
 			},
 		},
 		{
 			ID: "someid",
 			Data: map[string]any{
-				"text": "3 times",
+				"text": "a",
 			},
 		},
 		{
 			ID: "someid",
 			Data: map[string]any{
-				"text": "3 times",
+				"text": "a",
 			},
 		},
 		{
 			ID: "someid",
 			Data: map[string]any{
-				"text": "1 time Case sensitive 2 times",
+				"text": "b",
 			},
 		},
 		{
 			ID: "someid",
 			Data: map[string]any{
-				"text": "5 times",
+				"text": "c",
 			},
 		},
 		{
 			ID: "someid",
 			Data: map[string]any{
-				"text": "5 times",
+				"text": "c",
 			},
 		},
 		{
 			ID: "someid",
 			Data: map[string]any{
-				"text": "5 times",
+				"text": "c",
 			},
 		},
 		{
 			ID: "someid",
 			Data: map[string]any{
-				"text": "5 times",
+				"text": "c",
 			},
 		},
 		{
 			ID: "someid",
 			Data: map[string]any{
-				"text": "5 times",
+				"text": "c",
 			},
 		},
 		{
 			ID: "someid",
 			Data: map[string]any{
-				"text": "1 time case sensitive 2 times",
+				"text": "B",
 			},
 		},
 		{
@@ -100,22 +101,23 @@ func TestStandardDeviationText(t *testing.T) {
 		},
 		"list with different values": {
 			records:  testRecords,
-			expected: pointer(1.247219128924647),
+			expected: pointer(0.38),
 		},
 		"list with different values case sensitive": {
 			records:       testRecords,
 			caseSensitive: true,
-			expected:      pointer(1.6583123951777),
+			expected:      pointer(0.36),
 		},
 	}
 
 	for name, c := range cases {
 		t.Run(name, func(t *testing.T) {
-			actual, _ := record.StandardDeviationText(c.records, "text", c.caseSensitive)
+			actual, err := record.Confidence(c.records, "text", c.caseSensitive)
+			require.NoError(t, err)
 			if c.expected == nil {
 				assert.Nil(t, actual)
 			} else {
-				assert.NotNil(t, actual)
+				require.NotNil(t, actual)
 				assert.Equal(t, *c.expected, *actual)
 			}
 		})
