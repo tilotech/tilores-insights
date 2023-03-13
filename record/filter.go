@@ -19,17 +19,17 @@ import (
 type FilterCondition struct {
 	Path string
 
-	Equal  any
+	Equals any
 	IsNull *bool
 
 	StartsWith *string
 	EndsWith   *string
 	LikeRegex  *string
 
-	LessThan     *float64
-	LessEqual    *float64
-	GreaterThan  *float64
-	GreaterEqual *float64
+	LessThan      *float64
+	LessEquals    *float64
+	GreaterThan   *float64
+	GreaterEquals *float64
 
 	After  *time.Time
 	Since  *time.Time
@@ -109,7 +109,7 @@ func checkFilterCriteriaIsNull(record *api.Record, condition *FilterCondition) b
 }
 
 func hasFilterStringCriteria(condition *FilterCondition) bool {
-	return condition.Equal != nil ||
+	return condition.Equals != nil ||
 		condition.StartsWith != nil ||
 		condition.EndsWith != nil ||
 		condition.LikeRegex != nil
@@ -129,7 +129,7 @@ func checkFilterStringCriteria(record *api.Record, condition *FilterCondition) (
 		return false, err
 	}
 
-	if keep, err := checkFilterCriteriaEqual(value, condition.Equal, caseSensitive); !keep || err != nil {
+	if keep, err := checkFilterCriteriaEqual(value, condition.Equals, caseSensitive); !keep || err != nil {
 		return keep, err
 	}
 	if !checkFilterCriteriaStartsWith(value, condition.StartsWith, caseSensitive) {
@@ -207,9 +207,9 @@ func checkFilterCriteriaLikeRegex(value *string, likeRegex *string, caseSensitiv
 
 func hasFilterNumericCriteria(condition *FilterCondition) bool {
 	return condition.LessThan != nil ||
-		condition.LessEqual != nil ||
+		condition.LessEquals != nil ||
 		condition.GreaterThan != nil ||
-		condition.GreaterEqual != nil
+		condition.GreaterEquals != nil
 }
 
 func checkFilterNumericCriteria(record *api.Record, condition *FilterCondition) (bool, error) {
@@ -225,13 +225,13 @@ func checkFilterNumericCriteria(record *api.Record, condition *FilterCondition) 
 	if !checkFilterCriteriaCompare(value, condition.LessThan, checkFilterOpLessThan) {
 		return false, nil
 	}
-	if !checkFilterCriteriaCompare(value, condition.LessEqual, checkFilterOpLessEqual) {
+	if !checkFilterCriteriaCompare(value, condition.LessEquals, checkFilterOpLessEqual) {
 		return false, nil
 	}
 	if !checkFilterCriteriaCompare(value, condition.GreaterThan, checkFilterOpGreaterThan) {
 		return false, nil
 	}
-	if !checkFilterCriteriaCompare(value, condition.GreaterEqual, checkFilterOpGreaterEqual) {
+	if !checkFilterCriteriaCompare(value, condition.GreaterEquals, checkFilterOpGreaterEqual) {
 		return false, nil
 	}
 

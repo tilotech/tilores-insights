@@ -67,8 +67,8 @@ func TestFilter(t *testing.T) {
 			records: defaultRecords,
 			conditions: []*insights.FilterCondition{
 				{
-					Path:  "value",
-					Equal: "string a",
+					Path:   "value",
+					Equals: "string a",
 				},
 			},
 			expected: []*api.Record{r1},
@@ -78,7 +78,7 @@ func TestFilter(t *testing.T) {
 			conditions: []*insights.FilterCondition{
 				{
 					Path:          "value",
-					Equal:         "string A",
+					Equals:        "string A",
 					CaseSensitive: pointer(true),
 				},
 			},
@@ -89,7 +89,7 @@ func TestFilter(t *testing.T) {
 			conditions: []*insights.FilterCondition{
 				{
 					Path:          "value",
-					Equal:         "string a",
+					Equals:        "string a",
 					CaseSensitive: pointer(true),
 				},
 			},
@@ -99,8 +99,8 @@ func TestFilter(t *testing.T) {
 			records: defaultRecords,
 			conditions: []*insights.FilterCondition{
 				{
-					Path:  "does not exist",
-					Equal: "string a",
+					Path:   "does not exist",
+					Equals: "string a",
 				},
 			},
 			expected: []*api.Record{},
@@ -110,7 +110,7 @@ func TestFilter(t *testing.T) {
 			conditions: []*insights.FilterCondition{
 				{
 					Path: "map",
-					Equal: map[string]any{
+					Equals: map[string]any{
 						"faz": "baz",
 						"foo": "bar",
 					},
@@ -123,7 +123,7 @@ func TestFilter(t *testing.T) {
 			conditions: []*insights.FilterCondition{
 				{
 					Path: "map",
-					Equal: pointer(map[string]any{
+					Equals: pointer(map[string]any{
 						"faz": "baz",
 						"foo": "bar",
 					}),
@@ -352,8 +352,8 @@ func TestFilter(t *testing.T) {
 			records: defaultRecords,
 			conditions: []*insights.FilterCondition{
 				{
-					Path:      "numeric",
-					LessEqual: pointer(150.0),
+					Path:       "numeric",
+					LessEquals: pointer(150.0),
 				},
 			},
 			expected: []*api.Record{r1, r2},
@@ -362,8 +362,8 @@ func TestFilter(t *testing.T) {
 			records: defaultRecords,
 			conditions: []*insights.FilterCondition{
 				{
-					Path:      "numeric",
-					LessEqual: pointer(123.0),
+					Path:       "numeric",
+					LessEquals: pointer(123.0),
 				},
 			},
 			expected: []*api.Record{r1, r2},
@@ -372,8 +372,8 @@ func TestFilter(t *testing.T) {
 			records: defaultRecords,
 			conditions: []*insights.FilterCondition{
 				{
-					Path:      "does not exist",
-					LessEqual: pointer(150.0),
+					Path:       "does not exist",
+					LessEquals: pointer(150.0),
 				},
 			},
 			expected: []*api.Record{},
@@ -382,8 +382,8 @@ func TestFilter(t *testing.T) {
 			records: defaultRecords,
 			conditions: []*insights.FilterCondition{
 				{
-					Path:      "value",
-					LessEqual: pointer(150.0),
+					Path:       "value",
+					LessEquals: pointer(150.0),
 				},
 			},
 			expectError: true,
@@ -432,8 +432,8 @@ func TestFilter(t *testing.T) {
 			records: defaultRecords,
 			conditions: []*insights.FilterCondition{
 				{
-					Path:         "numeric",
-					GreaterEqual: pointer(100.0),
+					Path:          "numeric",
+					GreaterEquals: pointer(100.0),
 				},
 			},
 			expected: []*api.Record{r2, r3},
@@ -442,8 +442,8 @@ func TestFilter(t *testing.T) {
 			records: defaultRecords,
 			conditions: []*insights.FilterCondition{
 				{
-					Path:         "numeric",
-					GreaterEqual: pointer(123.0),
+					Path:          "numeric",
+					GreaterEquals: pointer(123.0),
 				},
 			},
 			expected: []*api.Record{r2, r3},
@@ -452,8 +452,8 @@ func TestFilter(t *testing.T) {
 			records: defaultRecords,
 			conditions: []*insights.FilterCondition{
 				{
-					Path:         "does not exist",
-					GreaterEqual: pointer(100.0),
+					Path:          "does not exist",
+					GreaterEquals: pointer(100.0),
 				},
 			},
 			expected: []*api.Record{},
@@ -462,8 +462,8 @@ func TestFilter(t *testing.T) {
 			records: defaultRecords,
 			conditions: []*insights.FilterCondition{
 				{
-					Path:         "value",
-					GreaterEqual: pointer(100.0),
+					Path:          "value",
+					GreaterEquals: pointer(100.0),
 				},
 			},
 			expectError: true,
@@ -633,7 +633,7 @@ func TestFilter(t *testing.T) {
 			conditions: []*insights.FilterCondition{
 				{
 					Path:   "value",
-					Equal:  "string a",
+					Equals: "string a",
 					Invert: pointer(true),
 				},
 			},
