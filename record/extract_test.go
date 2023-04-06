@@ -307,6 +307,7 @@ func TestExtractTime(t *testing.T) {
 	dataJSON := `
 	{
 		"time": "2023-03-07T16:06:05Z",
+		"timeISO": "2022-02-28T06:56:47.778565",
 		"not-a-time": "something else"
 	}
 	`
@@ -325,6 +326,9 @@ func TestExtractTime(t *testing.T) {
 	}{
 		"time": {
 			expected: pointer(time.Date(2023, 3, 7, 16, 6, 5, 0, time.UTC)),
+		},
+		"timeISO": {
+			expected: pointer(time.Date(2022, 2, 28, 6, 56, 47, 778565000, time.UTC)),
 		},
 		"not-a-time": {
 			expectError: true,
