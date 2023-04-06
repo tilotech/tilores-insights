@@ -102,11 +102,24 @@ func ExtractTime(record *api.Record, path string) (*time.Time, error) {
 	if value == nil || err != nil {
 		return nil, err
 	}
-	t, err := time.Parse(time.RFC3339Nano, *value)
-	if err != nil {
-		return nil, err
+	return parseTime(*value)
+}
+
+var supportedTimeFormats = [...]string{
+	time.RFC3339Nano,
+	"2006-01-02T15:04:05.999999",
+}
+
+func parseTime(t string) (*time.Time, error) {
+	var parsed time.Time
+	var err error
+	for _, format := range supportedTimeFormats {
+		parsed, err = time.Parse(format, t)
+		if err == nil {
+			return &parsed, nil
+		}
 	}
-	return &t, nil
+	return &parsed, err
 }
 
 // ExtractArray provides an array value of a record for the given path.
