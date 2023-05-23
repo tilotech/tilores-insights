@@ -111,8 +111,6 @@ func TestFrequencyDistribution(t *testing.T) {
 		top           int
 		sortASC       bool
 		expected      []*record.FrequencyDistributionEntry
-		expectedFirst *record.FrequencyDistributionEntry
-		expectedLast  *record.FrequencyDistributionEntry
 	}{
 		"empty list": {
 			records:  []*api.Record{},
@@ -380,7 +378,7 @@ func TestFrequencyDistribution(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			actual, err := record.FrequencyDistribution(c.records, c.path, c.caseSensitive, c.top, c.sortASC)
 			require.NoError(t, err)
-			assert.ElementsMatch(t, c.expected, actual)
+			assert.Equal(t, c.expected, actual)
 		})
 	}
 }
