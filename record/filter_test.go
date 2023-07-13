@@ -39,6 +39,12 @@ func TestFilter(t *testing.T) {
 			"time":    "2024-01-01T00:00:00Z",
 		},
 	}
+	r4 := &api.Record{
+		ID: "r4",
+		Data: map[string]any{
+			"numeric": 1.234567e+06,
+		},
+	}
 	defaultRecords := []*api.Record{
 		r1, r2, r3,
 	}
@@ -72,6 +78,26 @@ func TestFilter(t *testing.T) {
 				},
 			},
 			expected: []*api.Record{r1},
+		},
+		"equal too big numeric": {
+			records: []*api.Record{r4},
+			conditions: []*insights.FilterCondition{
+				{
+					Path:   "numeric",
+					Equals: 1234567,
+				},
+			},
+			expected: []*api.Record{r4},
+		},
+		"equal numeric as string": {
+			records: []*api.Record{r4},
+			conditions: []*insights.FilterCondition{
+				{
+					Path:   "numeric",
+					Equals: "1.234567e+06",
+				},
+			},
+			expected: []*api.Record{r4},
 		},
 		"equal strings, case sensitive": {
 			records: defaultRecords,
