@@ -3,6 +3,7 @@ package record
 import (
 	"fmt"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -155,6 +156,15 @@ func checkFilterCriteriaEqual(value *string, equal any, caseSensitive bool) (boo
 	equalString, err := valueToString(equal, caseSensitive)
 	if equalString == nil || err != nil {
 		return false, err
+	}
+
+	valueF, err := strconv.ParseFloat(*value, 64)
+	if err == nil {
+		equalF, err := strconv.ParseFloat(*equalString, 64)
+		if err != nil {
+			return false, nil
+		}
+		return valueF == equalF, nil
 	}
 	return *value == *equalString, nil
 }
