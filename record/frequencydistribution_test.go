@@ -99,6 +99,18 @@ func TestFrequencyDistribution(t *testing.T) {
 			},
 		},
 		{
+			ID: "someid",
+			Data: map[string]any{
+				"field1": "d",
+			},
+		},
+		{
+			ID: "someid",
+			Data: map[string]any{
+				"field1": "d",
+			},
+		},
+		{
 			ID:   "someid",
 			Data: map[string]any{},
 		},
@@ -132,39 +144,49 @@ func TestFrequencyDistribution(t *testing.T) {
 				{
 					Value:      "a",
 					Frequency:  3,
-					Percentage: 0.5,
+					Percentage: 0.375,
 				},
 				{
 					Value:      "b",
 					Frequency:  2,
-					Percentage: 0.3333333333333333,
+					Percentage: 0.25,
+				},
+				{
+					Value:      "d",
+					Frequency:  2,
+					Percentage: 0.25,
 				},
 				{
 					Value:      "c",
 					Frequency:  1,
-					Percentage: 0.16666666666666666,
+					Percentage: 0.125,
 				},
 			},
 		},
 		"on field top more than actual number of entries": {
 			records: testRecords,
 			path:    "field1",
-			top:     4,
+			top:     5,
 			expected: []*record.FrequencyDistributionEntry{
 				{
 					Value:      "a",
 					Frequency:  3,
-					Percentage: 0.5,
+					Percentage: 0.375,
 				},
 				{
 					Value:      "b",
 					Frequency:  2,
-					Percentage: 0.3333333333333333,
+					Percentage: 0.25,
+				},
+				{
+					Value:      "d",
+					Frequency:  2,
+					Percentage: 0.25,
 				},
 				{
 					Value:      "c",
 					Frequency:  1,
-					Percentage: 0.16666666666666666,
+					Percentage: 0.125,
 				},
 			},
 		},
@@ -176,7 +198,7 @@ func TestFrequencyDistribution(t *testing.T) {
 				{
 					Value:      "a",
 					Frequency:  3,
-					Percentage: 0.5,
+					Percentage: 0.375,
 				},
 			},
 		},
@@ -189,17 +211,22 @@ func TestFrequencyDistribution(t *testing.T) {
 				{
 					Value:      "c",
 					Frequency:  1,
-					Percentage: 0.16666666666666666,
+					Percentage: 0.125,
 				},
 				{
 					Value:      "b",
 					Frequency:  2,
-					Percentage: 0.3333333333333333,
+					Percentage: 0.25,
+				},
+				{
+					Value:      "d",
+					Frequency:  2,
+					Percentage: 0.25,
 				},
 				{
 					Value:      "a",
 					Frequency:  3,
-					Percentage: 0.5,
+					Percentage: 0.375,
 				},
 			},
 		},
@@ -217,14 +244,14 @@ func TestFrequencyDistribution(t *testing.T) {
 					Percentage: 0.5,
 				},
 				{
-					Value: map[string]interface{}{
+					Value: map[string]any{
 						"field2": "b",
 					},
 					Frequency:  2,
 					Percentage: 0.3333333333333333,
 				},
 				{
-					Value: map[string]interface{}{
+					Value: map[string]any{
 						"field1": "a",
 						"field2": "b",
 						"field3": "c",
@@ -248,7 +275,7 @@ func TestFrequencyDistribution(t *testing.T) {
 					Percentage: 0.5,
 				},
 				{
-					Value: map[string]interface{}{
+					Value: map[string]any{
 						"field2": "b",
 					},
 					Frequency:  2,
@@ -263,7 +290,7 @@ func TestFrequencyDistribution(t *testing.T) {
 			top:     -1,
 			expected: []*record.FrequencyDistributionEntry{
 				{
-					Value: map[string]interface{}{
+					Value: map[string]any{
 						"field1": "a",
 						"field2": "b",
 						"field3": "c",
@@ -272,7 +299,7 @@ func TestFrequencyDistribution(t *testing.T) {
 					Percentage: 0.16666666666666666,
 				},
 				{
-					Value: map[string]interface{}{
+					Value: map[string]any{
 						"field2": "b",
 					},
 					Frequency:  2,
@@ -350,14 +377,14 @@ func TestFrequencyDistribution(t *testing.T) {
 					Percentage: 0.5,
 				},
 				{
-					Value: map[string]interface{}{
+					Value: map[string]any{
 						"field2": "b",
 					},
 					Frequency:  2,
 					Percentage: 0.3333333333333333,
 				},
 				{
-					Value: map[string]interface{}{
+					Value: map[string]any{
 						"field1": "A",
 						"field2": "A",
 					},
@@ -378,7 +405,7 @@ func TestFrequencyDistribution(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			actual, err := record.FrequencyDistribution(c.records, c.path, c.caseSensitive, c.top, c.sortASC)
 			require.NoError(t, err)
-			assert.Equal(t, c.expected, actual)
+			assert.EqualExportedValues(t, c.expected, actual)
 		})
 	}
 }
