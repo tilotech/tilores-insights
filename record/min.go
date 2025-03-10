@@ -9,17 +9,17 @@ import (
 // Using min on non-numeric paths will raise an error.
 // Returns null if all values are null.
 func Min(records []*api.Record, path string) (*float64, error) {
-	var min *float64
+	var minVal *float64
 	for _, record := range records {
 		number, err := ExtractNumber(record, path)
 		if err != nil {
 			return nil, err
 		}
 		if number != nil {
-			if min == nil || *number < *min {
-				min = number
+			if minVal == nil || *number < *minVal {
+				minVal = number
 			}
 		}
 	}
-	return min, nil
+	return minVal, nil
 }

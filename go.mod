@@ -1,10 +1,11 @@
 module github.com/tilotech/tilores-insights
 
-go 1.19
+go 1.24.0
 
 require (
-	github.com/stretchr/testify v1.8.2
-	github.com/tilotech/tilores-plugin-api v0.7.1
+	github.com/stretchr/testify v1.10.0
+	github.com/tilotech/tilores-plugin-api v0.17.0
+	golang.org/x/exp v0.0.0-20250305212735-054e65f0b394
 )
 
 require (
