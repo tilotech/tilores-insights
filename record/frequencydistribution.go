@@ -25,7 +25,7 @@ type FrequencyDistributionEntry struct {
 // highest or lowest results.
 //
 // Values with with equal frequency will always be returned in the order of the
-// first record for that entry.
+// first occurrence for that value.
 func FrequencyDistribution(records []*api.Record, path string, caseSensitive bool, top int, sortASC bool) ([]*FrequencyDistributionEntry, error) {
 	if top == 0 {
 		return []*FrequencyDistributionEntry{}, nil
