@@ -1,16 +1,18 @@
 package record
 
 import (
-	"sort"
+	"cmp"
 
 	api "github.com/tilotech/tilores-plugin-api"
+	"golang.org/x/exp/slices"
 )
 
 // FrequencyDistributionEntry represents a single row of a frequency distribution table.
 type FrequencyDistributionEntry struct {
-	Value      any     `json:"value"`
-	Frequency  int     `json:"frequency"`
-	Percentage float64 `json:"percentage"`
+	Value       any     `json:"value"`
+	Frequency   int     `json:"frequency"`
+	Percentage  float64 `json:"percentage"`
+	originalPos int
 }
 
 // FrequencyDistribution returns how often a non-null value for the provided
@@ -21,13 +23,16 @@ type FrequencyDistributionEntry struct {
 //
 // Using the 'top' option it is possible to limit the results to only the n
 // highest or lowest results.
+//
+// Values with with equal frequency will always be returned in the order of the
+// first occurrence for that value.
 func FrequencyDistribution(records []*api.Record, path string, caseSensitive bool, top int, sortASC bool) ([]*FrequencyDistributionEntry, error) {
 	if top == 0 {
 		return []*FrequencyDistributionEntry{}, nil
 	}
 	entriesMap := make(map[string]*FrequencyDistributionEntry, len(records))
 	counted := 0
-	for _, record := range records {
+	for i, record := range records {
 		val, err := ExtractString(record, path, caseSensitive)
 		if err != nil {
 			return nil, err
@@ -36,9 +41,10 @@ func FrequencyDistribution(records []*api.Record, path string, caseSensitive boo
 			counted++
 			if _, ok := entriesMap[*val]; !ok {
 				entriesMap[*val] = &FrequencyDistributionEntry{
-					Value:      Extract(record, path),
-					Frequency:  1,
-					Percentage: 0.0,
+					Value:       Extract(record, path),
+					Frequency:   1,
+					Percentage:  0.0,
+					originalPos: i,
 				}
 			} else {
 				entriesMap[*val].Frequency++
@@ -53,15 +59,21 @@ func FrequencyDistribution(records []*api.Record, path string, caseSensitive boo
 		entry.Percentage = float64(entry.Frequency) / float64(counted)
 		result = append(result, entry)
 	}
-	sortFunc := func(i, j int) bool {
-		return result[i].Percentage > result[j].Percentage
+	sortFunc := func(a, b *FrequencyDistributionEntry) int {
+		if a.Frequency == b.Frequency {
+			return cmp.Compare(a.originalPos, b.originalPos)
+		}
+		return cmp.Compare(b.Frequency, a.Frequency)
 	}
 	if sortASC {
-		sortFunc = func(i, j int) bool {
-			return result[i].Percentage < result[j].Percentage
+		sortFunc = func(a, b *FrequencyDistributionEntry) int {
+			if a.Frequency == b.Frequency {
+				return cmp.Compare(a.originalPos, b.originalPos)
+			}
+			return cmp.Compare(a.Frequency, b.Frequency)
 		}
 	}
-	sort.Slice(result, sortFunc)
+	slices.SortStableFunc(result, sortFunc)
 	if top > 0 && top < len(result) {
 		return result[0:top], nil
 	}

@@ -18,10 +18,3 @@ func Limit(records []*api.Record, count int, offset int) []*api.Record {
 	n := min(count, l-offset)
 	return records[offset : offset+n]
 }
-
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
-}
