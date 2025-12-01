@@ -45,7 +45,7 @@ func FrequencyDistribution(records []*api.Record, path string, caseSensitive boo
 			counted++
 			if _, ok := entriesMap[*val]; !ok {
 				entriesMap[*val] = &FrequencyDistributionEntry{
-					Value:       Extract(record, path),
+					Value:       v,
 					Frequency:   1,
 					Percentage:  0.0,
 					originalPos: positionMap[record],

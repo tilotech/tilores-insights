@@ -25,6 +25,17 @@ func TestFrequencyDistribution(t *testing.T) {
 					"field1": "a",
 					"field2": "a",
 				},
+				"list": []any{
+					map[string]any{
+						"nested": "a",
+					},
+					map[string]any{
+						"nested": "a",
+					},
+					map[string]any{
+						"nested": "b",
+					},
+				},
 			},
 		},
 		{
@@ -39,6 +50,17 @@ func TestFrequencyDistribution(t *testing.T) {
 				"nestedCase": map[string]any{
 					"field1": "a",
 					"field2": "a",
+				},
+				"list": []any{
+					map[string]any{
+						"nested": "a",
+					},
+					map[string]any{
+						"nested": "b",
+					},
+					map[string]any{
+						"nested": "c",
+					},
 				},
 			},
 		},
@@ -398,6 +420,28 @@ func TestFrequencyDistribution(t *testing.T) {
 			path:     "nestedCase",
 			top:      0,
 			expected: []*record.FrequencyDistributionEntry{},
+		},
+		"list with nested array": {
+			records: testRecords,
+			path:    "list.*.nested",
+			top:     -1,
+			expected: []*record.FrequencyDistributionEntry{
+				{
+					Value:      "a",
+					Frequency:  3,
+					Percentage: 0.5,
+				},
+				{
+					Value:      "b",
+					Frequency:  2,
+					Percentage: 0.3333333333333333,
+				},
+				{
+					Value:      "c",
+					Frequency:  1,
+					Percentage: 0.16666666666666666,
+				},
+			},
 		},
 	}
 
