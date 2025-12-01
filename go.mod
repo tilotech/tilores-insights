@@ -3,9 +3,9 @@ module github.com/tilotech/tilores-insights
 go 1.24.0
 
 require (
-	github.com/stretchr/testify v1.10.0
-	github.com/tilotech/tilores-plugin-api v0.17.0
-	golang.org/x/exp v0.0.0-20250305212735-054e65f0b394
+	github.com/stretchr/testify v1.11.1
+	github.com/tilotech/tilores-plugin-api v0.21.1
+	golang.org/x/exp v0.0.0-20251125195548-87e1e737ad39
 )
 
 require (
