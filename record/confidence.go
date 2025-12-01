@@ -15,7 +15,9 @@ import (
 //
 // b: 1 * 0.25
 //
-// confidence: 62.5%
+// confidence: (3 * 0.75 + 1 * 0.25) / 6 = 62.5%
+//
+// This is also called the Gini-Simpson Index.
 //
 // Null values are ignored in the calculation.
 // Returns null if all values are null.
@@ -25,11 +27,7 @@ func Confidence(records []*api.Record, path string, caseSensitive bool) (*float6
 	err := VisitString(records, path, caseSensitive, func(val *string, _ *api.Record) error {
 		if val != nil {
 			valueCount++
-			if _, ok := frequencies[*val]; !ok {
-				frequencies[*val] = 1
-			} else {
-				frequencies[*val]++
-			}
+			frequencies[*val]++
 		}
 		return nil
 	})
