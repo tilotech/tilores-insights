@@ -48,6 +48,10 @@ func extract(data any, pathParts []string) any {
 // ExtractNumber provides a numeric value of a record for the given path.
 func ExtractNumber(record *api.Record, path string) (*float64, error) {
 	val := Extract(record, path)
+	return validateNumber(val, path)
+}
+
+func validateNumber(val any, path string) (*float64, error) {
 	if val == nil {
 		return nil, nil
 	}
@@ -70,6 +74,10 @@ func ExtractNumber(record *api.Record, path string) (*float64, error) {
 // into JSON.
 func ExtractString(record *api.Record, path string, caseSensitive bool) (*string, error) {
 	val := Extract(record, path)
+	return validateString(val, caseSensitive)
+}
+
+func validateString(val any, caseSensitive bool) (*string, error) {
 	if val == nil {
 		return nil, nil
 	}
@@ -98,11 +106,18 @@ func valueToString(val any, caseSensitive bool) (*string, error) {
 
 // ExtractTime provides a time value of a record for the given path.
 func ExtractTime(record *api.Record, path string) (*time.Time, error) {
-	value, err := ExtractString(record, path, true)
-	if value == nil || err != nil {
+	val, err := ExtractString(record, path, true)
+	if err != nil {
 		return nil, err
 	}
-	return parseTime(*value)
+	return validateTime(val)
+}
+
+func validateTime(val *string) (*time.Time, error) {
+	if val == nil {
+		return nil, nil
+	}
+	return parseTime(*val)
 }
 
 var supportedTimeFormats = [...]string{
@@ -125,6 +140,10 @@ func parseTime(t string) (*time.Time, error) {
 // ExtractArray provides an array value of a record for the given path.
 func ExtractArray(record *api.Record, path string) ([]any, error) {
 	val := Extract(record, path)
+	return validateArray(val, path)
+}
+
+func validateArray(val any, path string) ([]any, error) {
 	if val == nil {
 		return nil, nil
 	}
@@ -132,20 +151,4 @@ func ExtractArray(record *api.Record, path string) ([]any, error) {
 		return arr, nil
 	}
 	return nil, fmt.Errorf("invalid type while extracting array from path %v, received %T", path, val)
-}
-
-func extractStringKeys(record *api.Record, paths []string, caseSensitive bool) (string, error) {
-	key := ""
-	for _, path := range paths {
-		s, err := ExtractString(record, path, caseSensitive)
-		if err != nil {
-			return "", err
-		}
-		if s == nil {
-			key += ":n:"
-		} else {
-			key += fmt.Sprintf(":s:%v", *s)
-		}
-	}
-	return key, nil
 }

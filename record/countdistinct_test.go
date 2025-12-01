@@ -12,7 +12,7 @@ import (
 func TestCountDistinct(t *testing.T) {
 	testRecords := []*api.Record{
 		{
-			ID: "someid",
+			ID: "someid1",
 			Data: map[string]any{
 				"nested": map[string]any{
 					"field1": "a",
@@ -20,10 +20,18 @@ func TestCountDistinct(t *testing.T) {
 				},
 				"field4": "not-empty",
 				"field5": "",
+				"list": []any{
+					map[string]any{
+						"nested": "a",
+					},
+					map[string]any{
+						"nested": "b",
+					},
+				},
 			},
 		},
 		{
-			ID: "someid",
+			ID: "someid2",
 			Data: map[string]any{
 				"nested": map[string]any{
 					"field1": "c",
@@ -31,10 +39,18 @@ func TestCountDistinct(t *testing.T) {
 				},
 				"field4": "not-empty",
 				"field5": "",
+				"list": []any{
+					map[string]any{
+						"nested": "a",
+					},
+					map[string]any{
+						"nested": "c",
+					},
+				},
 			},
 		},
 		{
-			ID: "someid",
+			ID: "someid3",
 			Data: map[string]any{
 				"nested": map[string]any{
 					"field2": "b",
@@ -44,7 +60,7 @@ func TestCountDistinct(t *testing.T) {
 			},
 		},
 		{
-			ID: "someid",
+			ID: "someid4",
 			Data: map[string]any{
 				"nested": map[string]any{
 					"field1": "a",
@@ -52,7 +68,7 @@ func TestCountDistinct(t *testing.T) {
 			},
 		},
 		{
-			ID: "someid",
+			ID: "someid5",
 			Data: map[string]any{
 				"nested": map[string]any{
 					"field1": "A",
@@ -61,7 +77,7 @@ func TestCountDistinct(t *testing.T) {
 			},
 		},
 		{
-			ID: "someid",
+			ID: "someid6",
 			Data: map[string]any{
 				"nested": map[string]any{
 					"field1": "a",
@@ -71,7 +87,7 @@ func TestCountDistinct(t *testing.T) {
 			},
 		},
 		{
-			ID:   "someid",
+			ID:   "someid7",
 			Data: map[string]any{},
 		},
 		nil,
@@ -122,6 +138,16 @@ func TestCountDistinct(t *testing.T) {
 		"list with same values on different fields": {
 			records:  testRecords,
 			paths:    []string{"field4", "field5"},
+			expected: 2,
+		},
+		"list with nested array": {
+			records:  testRecords,
+			paths:    []string{"list.*.nested"},
+			expected: 3,
+		},
+		"list with nested array index": {
+			records:  testRecords,
+			paths:    []string{"list.1.nested"},
 			expected: 2,
 		},
 	}

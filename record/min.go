@@ -10,16 +10,13 @@ import (
 // Returns null if all values are null.
 func Min(records []*api.Record, path string) (*float64, error) {
 	var minVal *float64
-	for _, record := range records {
-		number, err := ExtractNumber(record, path)
-		if err != nil {
-			return nil, err
-		}
+	err := VisitNumber(records, path, func(number *float64, _ *api.Record) error {
 		if number != nil {
 			if minVal == nil || *number < *minVal {
 				minVal = number
 			}
 		}
-	}
-	return minVal, nil
+		return nil
+	})
+	return minVal, err
 }

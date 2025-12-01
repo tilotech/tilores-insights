@@ -13,24 +13,21 @@ import (
 func FlattenDistinct(records []*api.Record, path string, caseSensitive bool) ([]any, error) {
 	result := []any{}
 	unique := map[string]struct{}{}
-	for _, record := range records {
-		array, err := ExtractArray(record, path)
-		if err != nil {
-			return nil, err
-		}
+	err := VisitArray(records, path, func(array []any, _ *api.Record) error {
 		for _, e := range array {
 			if e == nil {
 				continue
 			}
 			val, err := valueToString(e, caseSensitive)
 			if err != nil {
-				return nil, err
+				return err
 			}
 			if _, ok := unique[*val]; !ok {
 				unique[*val] = struct{}{}
 				result = append(result, e)
 			}
 		}
-	}
-	return result, nil
+		return nil
+	})
+	return result, err
 }

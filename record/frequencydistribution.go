@@ -26,31 +26,40 @@ type FrequencyDistributionEntry struct {
 //
 // Values with with equal frequency will always be returned in the order of the
 // first occurrence for that value.
-func FrequencyDistribution(records []*api.Record, path string, caseSensitive bool, top int, sortASC bool) ([]*FrequencyDistributionEntry, error) {
+func FrequencyDistribution(records []*api.Record, path string, caseSensitive bool, top int, sortASC bool) ([]*FrequencyDistributionEntry, error) { //nolint:gocognit
 	if top == 0 {
 		return []*FrequencyDistributionEntry{}, nil
 	}
+	positionMap := map[*api.Record]int{}
+	for i := range records {
+		positionMap[records[i]] = i
+	}
 	entriesMap := make(map[string]*FrequencyDistributionEntry, len(records))
 	counted := 0
-	for i, record := range records {
-		val, err := ExtractString(record, path, caseSensitive)
+	err := Visit(records, path, func(v any, record *api.Record) error {
+		val, err := validateString(v, caseSensitive)
 		if err != nil {
-			return nil, err
+			return err
 		}
 		if val != nil {
 			counted++
 			if _, ok := entriesMap[*val]; !ok {
 				entriesMap[*val] = &FrequencyDistributionEntry{
-					Value:       Extract(record, path),
+					Value:       v,
 					Frequency:   1,
 					Percentage:  0.0,
-					originalPos: i,
+					originalPos: positionMap[record],
 				}
 			} else {
 				entriesMap[*val].Frequency++
 			}
 		}
+		return nil
+	})
+	if err != nil {
+		return nil, err
 	}
+
 	result := make([]*FrequencyDistributionEntry, 0, len(entriesMap))
 	if counted == 0 {
 		return result, nil

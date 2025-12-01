@@ -9,17 +9,19 @@ import (
 func ValuesDistinct(records []*api.Record, path string, caseSensitive bool) ([]any, error) {
 	result := make([]any, 0, len(records))
 	unique := make(map[string]struct{}, len(records))
-	for _, record := range records {
-		val, err := ExtractString(record, path, caseSensitive)
+
+	err := Visit(records, path, func(v any, _ *api.Record) error {
+		val, err := validateString(v, caseSensitive)
 		if err != nil {
-			return nil, err
+			return err
 		}
 		if val != nil {
 			if _, ok := unique[*val]; !ok {
 				unique[*val] = struct{}{}
-				result = append(result, Extract(record, path))
+				result = append(result, v)
 			}
 		}
-	}
-	return result, nil
+		return nil
+	})
+	return result, err
 }

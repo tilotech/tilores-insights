@@ -115,7 +115,7 @@ func TestExtract(t *testing.T) {
 		"list.a": {
 			expected: nil,
 		},
-		"list.4": {
+		"list.3": {
 			expected: nil,
 		},
 		"list.-1": {
