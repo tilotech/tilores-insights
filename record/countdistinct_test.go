@@ -20,6 +20,14 @@ func TestCountDistinct(t *testing.T) {
 				},
 				"field4": "not-empty",
 				"field5": "",
+				"list": []any{
+					map[string]any{
+						"nested": "a",
+					},
+					map[string]any{
+						"nested": "b",
+					},
+				},
 			},
 		},
 		{
@@ -31,6 +39,14 @@ func TestCountDistinct(t *testing.T) {
 				},
 				"field4": "not-empty",
 				"field5": "",
+				"list": []any{
+					map[string]any{
+						"nested": "a",
+					},
+					map[string]any{
+						"nested": "c",
+					},
+				},
 			},
 		},
 		{
@@ -122,6 +138,16 @@ func TestCountDistinct(t *testing.T) {
 		"list with same values on different fields": {
 			records:  testRecords,
 			paths:    []string{"field4", "field5"},
+			expected: 2,
+		},
+		"list with nested array": {
+			records:  testRecords,
+			paths:    []string{"list.*.nested"},
+			expected: 3,
+		},
+		"list with nested array index": {
+			records:  testRecords,
+			paths:    []string{"list.1.nested"},
 			expected: 2,
 		},
 	}
