@@ -1,6 +1,8 @@
 package record
 
 import (
+	"strings"
+
 	api "github.com/tilotech/tilores-plugin-api"
 )
 
@@ -12,17 +14,16 @@ import (
 // If all paths are null, then this does not count as a new value. However, if
 // at least one path has a value, then this does count as a new value.
 func CountDistinct(records []*api.Record, paths []string, caseSensitive bool) (int, error) {
-	nilKey, _ := extractStringKeys(&api.Record{Data: map[string]any{}}, paths, caseSensitive)
-
+	recordKeys, err := extractStringKeys(records, paths, caseSensitive)
+	if err != nil {
+		return 0, err
+	}
 	keys := map[string]struct{}{}
-	for _, record := range records {
-		key, err := extractStringKeys(record, paths, caseSensitive)
-		if err != nil {
-			return 0, err
+	for _, key := range recordKeys {
+		if !strings.Contains(key, ":s:") {
+			continue
 		}
-		if key != nilKey {
-			keys[key] = struct{}{}
-		}
+		keys[key] = struct{}{}
 	}
 	return len(keys), nil
 }

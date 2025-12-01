@@ -12,12 +12,13 @@ func Group(records []*api.Record, paths []string, caseSensitive bool) ([][]*api.
 	}
 	groups := make([][]*api.Record, 0)
 	idx := make(map[string]int, len(records))
+	recordKeys, err := extractStringKeys(records, paths, caseSensitive)
+	if err != nil {
+		return nil, err
+	}
 
-	for _, record := range records {
-		key, err := extractStringKeys(record, paths, caseSensitive)
-		if err != nil {
-			return nil, err
-		}
+	for i, record := range records {
+		key := recordKeys[i]
 		i, ok := idx[key]
 		if !ok {
 			i = len(groups)

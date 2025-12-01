@@ -17,18 +17,18 @@ func Oldest(records []*api.Record, path string) (*api.Record, error) {
 	var record *api.Record
 	var oldestTime *time.Time
 
-	for _, r := range records {
-		t, err := ExtractTime(r, path)
-		if err != nil {
-			return nil, err
-		}
+	err := VisitTime(records, path, func(t *time.Time, r *api.Record) error {
 		if t == nil {
-			continue
+			return nil
 		}
 		if oldestTime == nil || oldestTime.After(*t) {
 			oldestTime = t
 			record = r
 		}
+		return nil
+	})
+	if err != nil {
+		return nil, err
 	}
 	return record, nil
 }

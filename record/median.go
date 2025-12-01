@@ -12,18 +12,15 @@ import (
 // Null values are ignored in the calculation.
 // Returns null if all values are null.
 func Median(records []*api.Record, path string) (*float64, error) {
-	if len(records) == 0 {
-		return nil, nil
-	}
 	numbers := []float64{}
-	for _, record := range records {
-		number, err := ExtractNumber(record, path)
-		if err != nil {
-			return nil, err
-		}
+	err := VisitNumber(records, path, func(number *float64, _ *api.Record) error {
 		if number != nil {
 			numbers = append(numbers, *number)
 		}
+		return nil
+	})
+	if err != nil {
+		return nil, err
 	}
 	counted := len(numbers)
 	if counted == 0 {

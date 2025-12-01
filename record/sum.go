@@ -10,20 +10,17 @@ import (
 // Null values are ignored in the calculation.
 // Returns null if all values are null.
 func Sum(records []*api.Record, path string) (*float64, error) {
-	if len(records) == 0 {
-		return nil, nil
-	}
 	sum := 0.0
 	counted := 0.0
-	for _, record := range records {
-		number, err := ExtractNumber(record, path)
-		if err != nil {
-			return nil, err
-		}
+	err := VisitNumber(records, path, func(number *float64, _ *api.Record) error {
 		if number != nil {
 			sum += *number
 			counted++
 		}
+		return nil
+	})
+	if err != nil {
+		return nil, err
 	}
 	if counted == 0 {
 		return nil, nil

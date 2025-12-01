@@ -20,17 +20,9 @@ import (
 // Null values are ignored in the calculation.
 // Returns null if all values are null.
 func Confidence(records []*api.Record, path string, caseSensitive bool) (*float64, error) {
-	if len(records) == 0 {
-		return nil, nil
-	}
 	frequencies := make(map[string]int, len(records))
 	valueCount := 0
-
-	for _, record := range records {
-		val, err := ExtractString(record, path, caseSensitive)
-		if err != nil {
-			return nil, err
-		}
+	err := VisitString(records, path, caseSensitive, func(val *string, _ *api.Record) error {
 		if val != nil {
 			valueCount++
 			if _, ok := frequencies[*val]; !ok {
@@ -39,6 +31,10 @@ func Confidence(records []*api.Record, path string, caseSensitive bool) (*float6
 				frequencies[*val]++
 			}
 		}
+		return nil
+	})
+	if err != nil {
+		return nil, err
 	}
 	if valueCount == 0 {
 		return nil, nil

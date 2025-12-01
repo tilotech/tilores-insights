@@ -22,16 +22,16 @@ func StandardDeviation(records []*api.Record, path string) (*float64, error) {
 	}
 	difSquareSum := 0.0
 	counted := 0.0
-	for _, record := range records {
-		number, err := ExtractNumber(record, path)
-		if err != nil {
-			return nil, err
-		}
+	err = VisitNumber(records, path, func(number *float64, _ *api.Record) error {
 		if number != nil {
 			dif := *number - *avg
 			difSquareSum += dif * dif
 			counted++
 		}
+		return nil
+	})
+	if err != nil {
+		return nil, err
 	}
 	if counted == 0 {
 		return nil, nil

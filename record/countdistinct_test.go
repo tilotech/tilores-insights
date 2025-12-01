@@ -12,7 +12,7 @@ import (
 func TestCountDistinct(t *testing.T) {
 	testRecords := []*api.Record{
 		{
-			ID: "someid",
+			ID: "someid1",
 			Data: map[string]any{
 				"nested": map[string]any{
 					"field1": "a",
@@ -23,7 +23,7 @@ func TestCountDistinct(t *testing.T) {
 			},
 		},
 		{
-			ID: "someid",
+			ID: "someid2",
 			Data: map[string]any{
 				"nested": map[string]any{
 					"field1": "c",
@@ -34,7 +34,7 @@ func TestCountDistinct(t *testing.T) {
 			},
 		},
 		{
-			ID: "someid",
+			ID: "someid3",
 			Data: map[string]any{
 				"nested": map[string]any{
 					"field2": "b",
@@ -44,7 +44,7 @@ func TestCountDistinct(t *testing.T) {
 			},
 		},
 		{
-			ID: "someid",
+			ID: "someid4",
 			Data: map[string]any{
 				"nested": map[string]any{
 					"field1": "a",
@@ -52,7 +52,7 @@ func TestCountDistinct(t *testing.T) {
 			},
 		},
 		{
-			ID: "someid",
+			ID: "someid5",
 			Data: map[string]any{
 				"nested": map[string]any{
 					"field1": "A",
@@ -61,7 +61,7 @@ func TestCountDistinct(t *testing.T) {
 			},
 		},
 		{
-			ID: "someid",
+			ID: "someid6",
 			Data: map[string]any{
 				"nested": map[string]any{
 					"field1": "a",
@@ -71,7 +71,7 @@ func TestCountDistinct(t *testing.T) {
 			},
 		},
 		{
-			ID:   "someid",
+			ID:   "someid7",
 			Data: map[string]any{},
 		},
 		nil,
