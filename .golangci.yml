@@ -34,6 +34,14 @@ linters:
     - whitespace
 
   settings:
+    govet:
+      disable:
+        # Reports calls it could not rewrite for a "//go:fix inline" directive,
+        # which for generic stdlib helpers (slices.Index, slices.SortFunc) it
+        # never can: "type parameter inference is not yet supported". Nothing
+        # the caller can act on.
+        - inline
+
     gocognit:
       # minimal code complexity to report, 30 by default (but we recommend 10-20)
       min-complexity: 20
